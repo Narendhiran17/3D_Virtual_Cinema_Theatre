@@ -7,11 +7,13 @@ import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRe
 // =============================================================================
 // STATE & CONFIGURATION
 // =============================================================================
+const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || '').replace(/\/$/, '');
+
 const state = {
-  movieTitle: "Interstellar • IMAX 70mm Special Presentation",
-  youtubeUrl: "https://www.youtube.com/watch?v=zSWdZVtXT7E",
-  youtubeVideoId: "zSWdZVtXT7E",
-  currentSeatId: "D-008",
+  movieTitle: import.meta.env.VITE_DEFAULT_MOVIE_TITLE || "Interstellar • IMAX 70mm Special Presentation",
+  youtubeUrl: import.meta.env.VITE_DEFAULT_YOUTUBE_URL || "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+  youtubeVideoId: import.meta.env.VITE_DEFAULT_YOUTUBE_VIDEO_ID || "zSWdZVtXT7E",
+  currentSeatId: import.meta.env.VITE_DEFAULT_SEAT_ID || "D-008",
   lightingMode: "cinema", // 'cinema' | 'house' | 'blackout'
   inTheatre: false,
   isOrbitMode: false,
@@ -216,7 +218,19 @@ async function loadMetadataAndAuditorium() {
   const progressBar = document.getElementById('loader-progress-fill');
 
   try {
-    // 1. Fetch normalized seat layout metadata
+    // 1. Connect to backend if configured
+    if (BACKEND_URL) {
+      try {
+        const backendHealth = await fetch(`${BACKEND_URL}/health/live`).then(r => r.json()).catch(() => null);
+        if (backendHealth) {
+          console.log('[Cinema Backend] Connected to Render API:', backendHealth);
+        }
+      } catch (err) {
+        console.warn('[Cinema Backend] Offline, using local fallback:', err);
+      }
+    }
+
+    // 2. Fetch normalized seat layout metadata
     const metaRes = await fetch('./assets/cinema_layout_metadata.json');
     layoutMetadata = await metaRes.json();
     progressBar.style.width = '35%';

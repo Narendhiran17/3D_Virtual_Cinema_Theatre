@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "npm --prefix app run dev",
     "build": "npm --prefix app run build",
-    "preview": "npm --prefix app run preview"
+    "preview": "npm --prefix app run preview",
+    "backend:dev": "cd backend && uvicorn app.main:app --reload --port 8000",
+    "backend:start": "cd backend && uvicorn app.main:app --host 0.0.0.0 --port 8000"
   },
   "keywords": [
     "threejs",
@@ -13,7 +15,10 @@
     "virtual-cinema",
     "css3d",
     "cinemascope",
-    "youtube-player"
+    "youtube-player",
+    "fastapi",
+    "render",
+    "vercel"
   ],
   "author": "Antigravity",
   "license": "MIT"

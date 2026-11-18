@@ -91,7 +91,48 @@ npm run dev
 ---
 
 ## 🛠️ Tech Stack
-- **Three.js** (WebGL 3D Rendering & OrbitControls)
-- **CSS3DRenderer** (Transforms YouTube iframe natively into 3D perspective)
-- **Blender 4.2+ Python API** (Procedural architecture, tiered risers, seat matrix generation)
-- **Vite** (Next-generation lightning-fast frontend tooling)
+- **Frontend**: Three.js (WebGL 3D Rendering & OrbitControls), CSS3DRenderer, Vite
+- **Backend**: FastAPI, Uvicorn, Pydantic, Python 3.10+
+- **3D Modeling & Pipeline**: Blender 4.2+ Python API, Draco Geometry Compression
+- **Cloud Hosting**: Vercel (Frontend), Render (Backend API)
+
+---
+
+## 🌐 Cloud Deployment Guide
+
+### Part 1: Deploy Backend to Render
+
+1. Go to your [Render Dashboard](https://dashboard.render.com/) and click **New +** → **Blueprint** (or **Web Service**).
+2. Connect your GitHub repository: `https://github.com/Narendhiran17/3D_Virtual_Cinema_Theatre.git`.
+3. If using **Blueprint** (Recommended):
+   - Render will automatically detect `render.yaml` at the root and prefill all configurations!
+4. If using **Manual Web Service**:
+   - **Name**: `cinema-theatre-backend`
+   - **Runtime**: `Python 3`
+   - **Root Directory**: `backend`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Health Check Path**: `/health/live`
+   - **Environment Variables**:
+     - `APP_ENV`: `production`
+     - `DEBUG`: `false`
+     - `SECRET_KEY`: *(Generate a random string or click generate)*
+     - `CORS_ORIGINS`: `http://localhost:3000,https://*.vercel.app`
+5. Click **Deploy Web Service**.
+6. Once deployed, copy your Render backend URL (e.g., `https://cinema-theatre-backend.onrender.com`).
+
+---
+
+### Part 2: Deploy Frontend to Vercel
+
+1. Go to your [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New...** → **Project**.
+2. Import repository `https://github.com/Narendhiran17/3D_Virtual_Cinema_Theatre.git`.
+3. Under **Project Settings**:
+   - The included `vercel.json` automatically configures Vite, build commands, and rewrites!
+   - **Root Directory**: Leave as `./` (or select `app`).
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist` (or `app/dist` if root)
+4. Under **Environment Variables**, add:
+   - `VITE_BACKEND_URL`: `https://your-backend-name.onrender.com` *(your Render service URL from Part 1)*
+5. Click **Deploy**.
+6. Vercel will build and launch your 3D Virtual Cinema Theatre globally in seconds!
