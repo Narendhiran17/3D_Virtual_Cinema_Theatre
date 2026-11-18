@@ -23,6 +23,7 @@ let screenMesh = null;
 let cssScreenObj = null;
 let iframeElement = null;
 let html5VideoElement = null;
+let ytPlayer = null;
 let isVideoPlaying = true;
 let auditoriumModel = null;
 let layoutMetadata = null;
@@ -454,9 +455,46 @@ function setupCSS3DScreen() {
   cssScene.add(cssScreenObj);
   console.log('CSS3D Dual-Engine Screen initialized at:', cssScreenObj.position, 'Scale:', scale);
 
+  // Bind YouTube Player API
+  bindYouTubePlayer();
+
   // Initialize with default video URL (without autoplay until theatre entry)
   playTrailer(state.youtubeUrl || state.youtubeVideoId, false);
 }
+
+function bindYouTubePlayer() {
+  if (window.YT && window.YT.Player && iframeElement) {
+    try {
+      if (ytPlayer && typeof ytPlayer.destroy === 'function') {
+        ytPlayer.destroy();
+      }
+      ytPlayer = new YT.Player('theatre-youtube-player', {
+        events: {
+          'onReady': () => {
+            console.log('YouTube Player bound successfully via official API');
+          },
+          'onStateChange': (event) => {
+            // YT.PlayerState: 1 = PLAYING, 2 = PAUSED, 0 = ENDED, 3 = BUFFERING
+            if (event.data === 1) {
+              isVideoPlaying = true;
+              updatePlayPauseButton(true);
+            } else if (event.data === 2 || event.data === 0) {
+              isVideoPlaying = false;
+              updatePlayPauseButton(false);
+            }
+          }
+        }
+      });
+    } catch (e) {
+      console.warn('Could not bind YT.Player instance:', e);
+    }
+  }
+}
+
+// Global callback triggered when YouTube Iframe API finishes loading
+window.onYouTubeIframeAPIReady = function() {
+  bindYouTubePlayer();
+};
 
 function unloadHTML5Video() {
   if (!html5VideoElement) return;
@@ -521,9 +559,13 @@ function playTrailer(sourceInput, autoplay = true) {
     unloadHTML5Video();
 
     iframeElement.style.display = 'block';
-    const originParam = window.location.origin ? `&origin=${encodeURIComponent(window.location.origin)}` : '';
-    // Use youtube-nocookie.com to maximize compatibility on external sites and prevent cookie blocks
-    iframeElement.src = `https://www.youtube-nocookie.com/embed/${parsed.id}?autoplay=${autoplayParam}&enablejsapi=1&rel=0&modestbranding=1&controls=1&playsinline=1&fs=1${originParam}`;
+    // Raw origin without URL-encoding so YouTube's postMessage origin verification passes
+    const originParam = window.location.origin ? `&origin=${window.location.origin}` : '';
+    const newSrc = `https://www.youtube-nocookie.com/embed/${parsed.id}?autoplay=${autoplayParam}&enablejsapi=1&rel=0&modestbranding=1&controls=1&playsinline=1&fs=1${originParam}`;
+    if (iframeElement.src !== newSrc) {
+      iframeElement.src = newSrc;
+      setTimeout(bindYouTubePlayer, 800);
+    }
     isVideoPlaying = autoplay;
     updatePlayPauseButton(autoplay);
   }
@@ -536,6 +578,77 @@ function updatePlayPauseButton(isPlaying) {
     btn.innerHTML = '⏸️ Pause Trailer';
   } else {
     btn.innerHTML = '▶️ Play Trailer';
+  }
+}
+
+function toggleTrailerPlayback() {
+  // 1. Direct HTML5 Video (MP4 / WebM / local blob)
+  if (state.currentVideoSource && state.currentVideoSource.type === 'direct' && html5VideoElement) {
+    if (html5VideoElement.paused || html5VideoElement.ended) {
+      const playPromise = html5VideoElement.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isVideoPlaying = true;
+          updatePlayPauseButton(true);
+        }).catch(err => {
+          console.warn('Direct video play blocked by browser policy, muting to resume:', err);
+          html5VideoElement.muted = true;
+          html5VideoElement.play().then(() => {
+            isVideoPlaying = true;
+            updatePlayPauseButton(true);
+            showToast('🔊 Trailer auto-muted by browser. Click screen to unmute.');
+          }).catch(e => {
+            console.error('Failed to resume HTML5 video:', e);
+          });
+        });
+      }
+    } else {
+      html5VideoElement.pause();
+      isVideoPlaying = false;
+      updatePlayPauseButton(false);
+    }
+    return;
+  }
+
+  // 2. YouTube Official YT.Player instance (if available and ready)
+  if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+    try {
+      const playerState = ytPlayer.getPlayerState();
+      if (playerState === 1 || playerState === 3) { // PLAYING or BUFFERING
+        ytPlayer.pauseVideo();
+        isVideoPlaying = false;
+        updatePlayPauseButton(false);
+      } else {
+        ytPlayer.playVideo();
+        isVideoPlaying = true;
+        updatePlayPauseButton(true);
+      }
+      return;
+    } catch (e) {
+      console.warn('YT.Player call failed, falling back to postMessage:', e);
+    }
+  }
+
+  // 3. Multi-format postMessage Fallback (sends both Array and String payloads to iframe)
+  if (iframeElement && iframeElement.contentWindow) {
+    const action = isVideoPlaying ? 'pauseVideo' : 'playVideo';
+
+    const payloads = [
+      JSON.stringify({ event: 'command', func: action, args: [] }),
+      JSON.stringify({ event: 'command', func: action, args: '' }),
+      JSON.stringify({ event: 'command', func: action }),
+    ];
+
+    payloads.forEach(p => {
+      try {
+        iframeElement.contentWindow.postMessage(p, '*');
+      } catch (err) {
+        console.warn('postMessage error:', err);
+      }
+    });
+
+    isVideoPlaying = !isVideoPlaying;
+    updatePlayPauseButton(isVideoPlaying);
   }
 }
 
@@ -970,27 +1083,24 @@ function setupEventListeners() {
 
   // Bottom Dock: Screen Play/Pause
   document.getElementById('btn-toggle-video').addEventListener('click', () => {
-    if (state.currentVideoSource && state.currentVideoSource.type === 'direct' && html5VideoElement) {
-      if (html5VideoElement.paused) {
-        html5VideoElement.play();
-        isVideoPlaying = true;
-        updatePlayPauseButton(true);
-      } else {
-        html5VideoElement.pause();
-        isVideoPlaying = false;
-        updatePlayPauseButton(false);
+    toggleTrailerPlayback();
+  });
+
+  // Listen to postMessage events from YouTube iframe for two-way sync
+  window.addEventListener('message', (event) => {
+    try {
+      const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+      if (data && data.info && typeof data.info.playerState !== 'undefined') {
+        const ps = data.info.playerState;
+        if (ps === 1) { // PLAYING
+          isVideoPlaying = true;
+          updatePlayPauseButton(true);
+        } else if (ps === 2 || ps === 0) { // PAUSED or ENDED
+          isVideoPlaying = false;
+          updatePlayPauseButton(false);
+        }
       }
-    } else if (iframeElement) {
-      if (isVideoPlaying) {
-        iframeElement.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-        isVideoPlaying = false;
-        updatePlayPauseButton(false);
-      } else {
-        iframeElement.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        isVideoPlaying = true;
-        updatePlayPauseButton(true);
-      }
-    }
+    } catch (e) {}
   });
 
   // Center View
