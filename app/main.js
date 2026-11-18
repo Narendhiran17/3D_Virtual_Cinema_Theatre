@@ -422,6 +422,7 @@ function setupCSS3DScreen() {
   video.playsInline = true;
   video.controls = true;
   video.autoplay = true;
+  video.loop = true; // Auto-loop when duration is reached
 
   video.addEventListener('error', () => {
     // Ignore error if video has no source set or was cleared
@@ -438,6 +439,17 @@ function setupCSS3DScreen() {
   video.addEventListener('pause', () => {
     isVideoPlaying = false;
     updatePlayPauseButton(false);
+  });
+
+  // Explicit recursive loop on duration completion
+  video.addEventListener('ended', () => {
+    console.log('Video duration reached. Recursively replaying from start...');
+    video.currentTime = 0;
+    video.play().catch(e => {
+      console.warn('Auto-loop play retry with muted fallback:', e);
+      video.muted = true;
+      video.play();
+    });
   });
 
   container.appendChild(video);
@@ -478,9 +490,22 @@ function bindYouTubePlayer() {
             if (event.data === 1) {
               isVideoPlaying = true;
               updatePlayPauseButton(true);
-            } else if (event.data === 2 || event.data === 0) {
+            } else if (event.data === 2) {
               isVideoPlaying = false;
               updatePlayPauseButton(false);
+            } else if (event.data === 0) {
+              // Video duration reached: recursively loop from start!
+              console.log('YouTube video duration reached. Recursively replaying from start...');
+              try {
+                if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+                  ytPlayer.seekTo(0, true);
+                  ytPlayer.playVideo();
+                }
+              } catch (e) {
+                console.warn('Auto-loop error:', e);
+              }
+              isVideoPlaying = true;
+              updatePlayPauseButton(true);
             }
           }
         }
@@ -551,7 +576,7 @@ function playTrailer(sourceInput, autoplay = true) {
     unloadHTML5Video();
 
     iframeElement.style.display = 'block';
-    iframeElement.src = `https://player.vimeo.com/video/${parsed.id}?autoplay=${autoplayParam}&title=0&byline=0&portrait=0`;
+    iframeElement.src = `https://player.vimeo.com/video/${parsed.id}?autoplay=${autoplayParam}&loop=1&title=0&byline=0&portrait=0`;
     isVideoPlaying = autoplay;
     updatePlayPauseButton(autoplay);
   } else {
@@ -561,7 +586,8 @@ function playTrailer(sourceInput, autoplay = true) {
     iframeElement.style.display = 'block';
     // Raw origin without URL-encoding so YouTube's postMessage origin verification passes
     const originParam = window.location.origin ? `&origin=${window.location.origin}` : '';
-    const newSrc = `https://www.youtube-nocookie.com/embed/${parsed.id}?autoplay=${autoplayParam}&enablejsapi=1&rel=0&modestbranding=1&controls=1&playsinline=1&fs=1${originParam}`;
+    // loop=1&playlist=${parsed.id} ensures YouTube embed natively loops indefinitely
+    const newSrc = `https://www.youtube-nocookie.com/embed/${parsed.id}?autoplay=${autoplayParam}&enablejsapi=1&rel=0&modestbranding=1&controls=1&playsinline=1&fs=1&loop=1&playlist=${parsed.id}${originParam}`;
     if (iframeElement.src !== newSrc) {
       iframeElement.src = newSrc;
       setTimeout(bindYouTubePlayer, 800);
@@ -1095,9 +1121,20 @@ function setupEventListeners() {
         if (ps === 1) { // PLAYING
           isVideoPlaying = true;
           updatePlayPauseButton(true);
-        } else if (ps === 2 || ps === 0) { // PAUSED or ENDED
+        } else if (ps === 2) { // PAUSED
           isVideoPlaying = false;
           updatePlayPauseButton(false);
+        } else if (ps === 0) { // ENDED - video duration reached: recursively restart
+          console.log('YouTube postMessage event reported ENDED. Replaying from start...');
+          if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+            ytPlayer.seekTo(0, true);
+            ytPlayer.playVideo();
+          } else if (iframeElement && iframeElement.contentWindow) {
+            iframeElement.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[0, true]}', '*');
+            iframeElement.contentWindow.postMessage('{"event":"command","func":"playVideo","args":[]}', '*');
+          }
+          isVideoPlaying = true;
+          updatePlayPauseButton(true);
         }
       }
     } catch (e) {}
