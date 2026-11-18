@@ -1,3 +1,4 @@
+import json
 from typing import List, Union
 from pydantic import AnyHttpUrl, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -18,8 +19,8 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     SECRET_KEY: str = "insecure_dev_secret_key_must_be_changed_in_production"
-    ALLOWED_HOSTS: List[str] = ["*"]
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
+    ALLOWED_HOSTS: Union[str, List[str]] = ["*"]
+    CORS_ORIGINS: Union[str, List[str]] = ["http://localhost:3000", "http://localhost:5173", "https://*.vercel.app"]
 
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://cinema_user:cinema_password@localhost:5432/cinema_platform"
@@ -31,13 +32,27 @@ class Settings(BaseSettings):
     # Business Invariants
     SEAT_LOCK_EXPIRATION_SECONDS: int = 600
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
-            return v
-        raise ValueError(v)
+    @field_validator("CORS_ORIGINS", "ALLOWED_HOSTS", mode="after")
+    @classmethod
+    def assemble_list(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("[") and v.endswith("]"):
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        return v
+
+    @field_validator("DATABASE_URL", mode="after")
+    @classmethod
+    def assemble_database_url(cls, v: str) -> str:
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif v.startswith("postgresql://") and "+asyncpg" not in v:
+            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
 
 
 settings = Settings()
