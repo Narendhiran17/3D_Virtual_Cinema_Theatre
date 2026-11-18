@@ -1691,53 +1691,113 @@ function render2DSeatMap(containerId, isFloatingModal = false) {
     rowEl.className = 'seat-row';
     rowEl.dataset.row = rowLetter;
 
-    const rowLabelLeft = document.createElement('div');
-    rowLabelLeft.className = 'row-label';
-    rowLabelLeft.textContent = rowLetter;
-    rowEl.appendChild(rowLabelLeft);
+    // Left row letter label
+    const leftLabel = document.createElement('span');
+    leftLabel.className = 'seat-row-label';
+    leftLabel.textContent = rowLetter;
+    rowEl.appendChild(leftLabel);
 
-    const seatGrid = document.createElement('div');
-    seatGrid.className = 'seat-row-cells';
-
-    for (let i = 1; i <= 15; i++) {
-      const seatId = `${rowLetter}-${String(i).padStart(3, '0')}`;
-      const seatBtn = document.createElement('button');
-      seatBtn.type = 'button';
-      seatBtn.className = 'seat-cell';
-      seatBtn.dataset.seatId = seatId;
-      seatBtn.textContent = i;
-
-      if (rowLetter === 'G') seatBtn.classList.add('vip');
-      if (rowLetter === 'A') seatBtn.classList.add('accessible');
-      if (seatId === 'D-008') seatBtn.classList.add('sweet-spot');
-      if (seatId === state.currentSeatId) seatBtn.classList.add('selected');
-
-      // Check if occupied by a remote Watch Party member
-      for (const [userId, member] of state.watchParty.remoteMembers.entries()) {
-        if (member.seatId === seatId) {
-          seatBtn.classList.add('occupied-by-guest');
-          seatBtn.title = `Occupied by ${member.name}`;
-          break;
-        }
-      }
-
-      seatBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectSeat(seatId, true);
-      });
-
-      seatGrid.appendChild(seatBtn);
+    // Left Block: seats 1, 2, 3
+    const leftBlock = document.createElement('div');
+    leftBlock.className = 'seat-block block-left';
+    for (let num = 1; num <= 3; num++) {
+      leftBlock.appendChild(createSeatNode(rowLetter, num, isFloatingModal));
     }
+    rowEl.appendChild(leftBlock);
 
-    rowEl.appendChild(seatGrid);
+    // Aisle Space Left
+    const aisleLeft = document.createElement('div');
+    aisleLeft.className = 'aisle-space';
+    rowEl.appendChild(aisleLeft);
 
-    const rowLabelRight = document.createElement('div');
-    rowLabelRight.className = 'row-label';
-    rowLabelRight.textContent = rowLetter;
-    rowEl.appendChild(rowLabelRight);
+    // Center Block: seats 4 through 12
+    const centerBlock = document.createElement('div');
+    centerBlock.className = 'seat-block block-center';
+    for (let num = 4; num <= 12; num++) {
+      centerBlock.appendChild(createSeatNode(rowLetter, num, isFloatingModal));
+    }
+    rowEl.appendChild(centerBlock);
+
+    // Aisle Space Right
+    const aisleRight = document.createElement('div');
+    aisleRight.className = 'aisle-space';
+    rowEl.appendChild(aisleRight);
+
+    // Right Block: seats 13 through 15
+    const rightBlock = document.createElement('div');
+    rightBlock.className = 'seat-block block-right';
+    for (let num = 13; num <= 15; num++) {
+      rightBlock.appendChild(createSeatNode(rowLetter, num, isFloatingModal));
+    }
+    rowEl.appendChild(rightBlock);
+
+    // Right row letter label
+    const rightLabel = document.createElement('span');
+    rightLabel.className = 'seat-row-label';
+    rightLabel.textContent = rowLetter;
+    rowEl.appendChild(rightLabel);
 
     container.appendChild(rowEl);
   });
+}
+
+function createSeatNode(rowLetter, num, isFloatingModal) {
+  const seatId = `${rowLetter}-${String(num).padStart(3, '0')}`;
+  const seatEl = document.createElement('button');
+  seatEl.type = 'button';
+  seatEl.className = 'seat-cell';
+  seatEl.dataset.seatId = seatId;
+  seatEl.dataset.row = rowLetter;
+  seatEl.dataset.num = num;
+
+  let seatType = 'STANDARD';
+  if (seatId === 'D-008') {
+    seatType = 'SWEET_SPOT';
+    seatEl.classList.add('seat-sweet-spot');
+    seatEl.innerHTML = `<span class="seat-icon">⭐</span>`;
+  } else if (rowLetter === 'G') {
+    seatType = 'VIP_RECLINER';
+    seatEl.classList.add('seat-vip');
+    seatEl.innerHTML = `<span class="seat-icon">👑</span>`;
+  } else if (rowLetter === 'A') {
+    seatType = 'ACCESSIBLE';
+    seatEl.classList.add('seat-accessible');
+    seatEl.innerHTML = `<span class="seat-icon">♿</span>`;
+  } else {
+    seatEl.classList.add('seat-standard');
+    seatEl.textContent = num;
+  }
+
+  // Check if occupied by a remote Watch Party member
+  for (const [userId, member] of state.watchParty.remoteMembers.entries()) {
+    if (member.seatId === seatId) {
+      seatEl.classList.add('occupied-by-guest');
+      seatEl.title = `Occupied by ${member.name}`;
+      break;
+    }
+  }
+
+  if (!seatEl.title) {
+    seatEl.title = `Row ${rowLetter}, Seat ${num} (${getSeatTypeTitle(seatId, seatType)})`;
+  }
+
+  if (seatId === state.currentSeatId) {
+    seatEl.classList.add('selected');
+  }
+
+  seatEl.addEventListener('click', (e) => {
+    e.preventDefault();
+    selectSeat(seatId, isFloatingModal);
+  });
+
+  return seatEl;
+}
+
+function getSeatTypeTitle(seatId, seatType) {
+  if (seatId === 'D-008') return 'Acoustic Sweet Spot';
+  if (seatType === 'VIP_RECLINER') return 'VIP Luxury Recliner';
+  if (seatType === 'ACCESSIBLE') return 'Wheelchair Accessible';
+  return 'Standard Burgundy Velvet';
 }
 
 function selectSeat(seatId, triggerCameraMove = false) {

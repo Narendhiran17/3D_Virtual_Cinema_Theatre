@@ -376,9 +376,11 @@ html, body {
 
 .seat-row {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 3px;
+  width: 100%;
 }
 
 .seat-row-label {
@@ -388,22 +390,28 @@ html, body {
   font-weight: 700;
   color: #717789;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .seat-block {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
   gap: 3px;
 }
 
 .aisle-space {
   width: 12px;
   height: 100%;
+  flex-shrink: 0;
 }
 
 /* Seat Buttons in 2D */
 .seat-cell {
   width: 22px;
   height: 22px;
+  flex-shrink: 0;
   border-radius: 4px 4px 2px 2px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
