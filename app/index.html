@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horizon Grand Cineplex • 3D Virtual Theatre & Trailer Experience</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <!-- 3D Viewport Root Container -->
+  <div id="viewport-container">
+    <!-- CSS3D Layer: Transforms the real YouTube IFrame in 3D Space matching Screen Geometry -->
+    <div id="css3d-container"></div>
+    <!-- WebGL Layer: Renders 3D Theatre Architecture, Seats, Lights and Shading -->
+    <div id="webgl-container"></div>
+  </div>
+
+  <!-- Loading Screen Overlay -->
+  <div id="loader-overlay" class="active">
+    <div class="loader-content">
+      <div class="loader-spinner"></div>
+      <h2 class="cinzel-title">HORIZON GRAND CINEPLEX</h2>
+      <p class="loader-sub">Preparing 3D Auditorium & CinemaScope Projection...</p>
+      <div class="loader-progress-bar">
+        <div id="loader-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lobby / Entrance Modal (User inputs Movie Name and YouTube Link) -->
+  <div id="lobby-modal" class="modal-backdrop active">
+    <div class="lobby-card glass-panel">
+      <div class="card-header">
+        <div class="cinema-badge">DCI 4K • 2.39:1 CINEMASCOPE • DOLBY ATMOS</div>
+        <h1 class="cinzel-title">HORIZON CINEPLEX</h1>
+        <p class="cinema-tagline">Step Inside Your Private 3D Virtual Screening Room</p>
+      </div>
+
+      <div class="card-body">
+        <div class="lobby-columns">
+          <!-- Left Column: Movie & Trailer Setup -->
+          <div class="lobby-col lobby-col-movie">
+            <div class="input-group">
+              <label for="input-movie-title">
+                <span class="label-icon">🎬</span> Movie Title
+              </label>
+              <input type="text" id="input-movie-title" placeholder="e.g. Interstellar (4K Trailer)" value="Interstellar • IMAX 70mm Special Presentation" autocomplete="off">
+            </div>
+
+            <div class="input-group">
+              <label for="input-youtube-url">
+                <span class="label-icon">▶️</span> YouTube Trailer URL or Video ID
+              </label>
+              <input type="text" id="input-youtube-url" placeholder="Paste YouTube link (e.g. https://www.youtube.com/watch?v=zSWdZVtXT7E)" value="https://www.youtube.com/watch?v=zSWdZVtXT7E" autocomplete="off">
+            </div>
+
+            <!-- Quick Trailer Presets -->
+            <div class="presets-section">
+              <label class="presets-label">Popular 4K Trailer Presets (Click to Load):</label>
+              <div class="preset-chips">
+                <button type="button" class="preset-btn active" data-title="Interstellar (4K Trailer)" data-url="https://www.youtube.com/watch?v=zSWdZVtXT7E">
+                  🌌 Interstellar
+                </button>
+                <button type="button" class="preset-btn" data-title="Dune: Part Two (Official Trailer)" data-url="https://www.youtube.com/watch?v=Way9Dexny3w">
+                  🏜️ Dune: Part Two
+                </button>
+                <button type="button" class="preset-btn" data-title="Avatar: The Way of Water (4K Trailer)" data-url="https://www.youtube.com/watch?v=d9MyW72ELq0">
+                  🌊 Avatar 2
+                </button>
+                <button type="button" class="preset-btn" data-title="Top Gun: Maverick (4K Trailer)" data-url="https://www.youtube.com/watch?v=giXco2jaZ_4">
+                  ✈️ Top Gun: Maverick
+                </button>
+                <button type="button" class="preset-btn" data-title="The Batman (Main Trailer 4K)" data-url="https://www.youtube.com/watch?v=mqqft2x_Aa4">
+                  🦇 The Batman
+                </button>
+              </div>
+            </div>
+
+            <div class="theatre-spec-chips">
+              <span class="spec-pill">🔊 Dolby Atmos 9.1.4</span>
+              <span class="spec-pill">📐 2.39:1 CinemaScope</span>
+              <span class="spec-pill">✨ 105 Luxury Tiers</span>
+            </div>
+          </div>
+
+          <!-- Right Column: 2D Auditorium Seating Chart -->
+          <div class="lobby-col lobby-col-seating">
+            <div class="seating-section-header">
+              <label class="presets-label">Auditorium Seating Chart (Select 2D Seat):</label>
+              <div class="seat-selected-badge">
+                <span class="badge-icon">🪑</span>
+                <span id="lobby-selected-seat-text">Row D, Seat 8 • Acoustic Sweet Spot</span>
+              </div>
+            </div>
+
+            <!-- 2D Interactive Seat Map Container -->
+            <div class="seat-map-board">
+              <!-- Curved Screen Top Indicator -->
+              <div class="screen-curve-container">
+                <div class="screen-curved-line"></div>
+                <span class="screen-curve-text">2.39:1 CINEMASCOPE CURVED SCREEN</span>
+              </div>
+
+              <!-- Interactive 2D Seat Matrix (Rows A - G) -->
+              <div id="lobby-seat-map" class="interactive-seat-map">
+                <!-- Dynamically populated with all 105 seats -->
+              </div>
+
+              <!-- Seat Map Legend -->
+              <div class="seat-map-legend">
+                <div class="legend-badge"><span class="legend-dot standard"></span> Standard</div>
+                <div class="legend-badge"><span class="legend-dot vip"></span> VIP (Row G)</div>
+                <div class="legend-badge"><span class="legend-dot accessible"></span> Accessible</div>
+                <div class="legend-badge"><span class="legend-dot sweet-spot">⭐</span> Sweet Spot</div>
+                <div class="legend-badge"><span class="legend-dot selected"></span> Selected</div>
+              </div>
+            </div>
+
+            <!-- Quick Preset Seat Buttons -->
+            <div class="seat-quick-presets">
+              <button type="button" class="seat-quick-btn active" data-seat="D-008">
+                ⭐ Sweet Spot (D-8)
+              </button>
+              <button type="button" class="seat-quick-btn" data-seat="G-008">
+                👑 VIP Recliner (G-8)
+              </button>
+              <button type="button" class="seat-quick-btn" data-seat="A-008">
+                ⚡ Front Row (A-8)
+              </button>
+              <button type="button" class="seat-quick-btn" id="btn-quick-random">
+                🎲 Random Seat
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action CTA -->
+        <button id="btn-enter-theatre" class="cta-enter-btn">
+          <span class="cta-icon">🎟️</span>
+          <span id="btn-enter-theatre-text" class="cta-text">ENTER THEATRE • ROW D, SEAT 8</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-Theatre HUD Top Bar -->
+  <header id="theatre-hud-top" class="hud-top glass-panel hide">
+    <div class="hud-left">
+      <div class="now-playing-indicator">
+        <span class="pulsing-dot"></span>
+        <span class="now-playing-label">NOW SHOWING:</span>
+      </div>
+      <h3 id="hud-movie-title" class="hud-title">Interstellar</h3>
+    </div>
+
+    <div class="hud-center">
+      <div class="seat-active-pill">
+        <span class="pill-icon">🪑</span>
+        <span id="hud-seat-info">Row D, Seat 8 (Acoustic Sweet Spot)</span>
+      </div>
+    </div>
+
+    <div class="hud-right">
+      <button id="btn-hud-seatmap" class="hud-btn primary">
+        <span>🪑</span> Seat Map
+      </button>
+      <button id="btn-change-movie" class="hud-btn secondary">
+        <span>🔄</span> Change Movie
+      </button>
+      <button id="btn-exit-lobby" class="hud-btn secondary">
+        <span>🚪</span> Lobby
+      </button>
+    </div>
+  </header>
+
+  <!-- In-Theatre Floating Seat Map Modal -->
+  <div id="theatre-seatmap-modal" class="modal-backdrop">
+    <div class="seatmap-modal-card glass-panel">
+      <div class="seatmap-modal-header">
+        <div class="seatmap-modal-title">
+          <span class="badge-icon">🪑</span>
+          <div class="modal-title-text">
+            <h3>Auditorium Seating Chart</h3>
+            <span class="modal-subtitle">Click any seat to move camera position immediately</span>
+          </div>
+        </div>
+        <button id="btn-close-seatmap" class="modal-close-btn" title="Close Seat Map">✕</button>
+      </div>
+      <div class="seatmap-modal-body">
+        <div class="screen-curve-container">
+          <div class="screen-curved-line"></div>
+          <span class="screen-curve-text">2.39:1 CINEMASCOPE CURVED SCREEN</span>
+        </div>
+        <div id="in-theatre-seat-map" class="interactive-seat-map"></div>
+        <div class="seat-map-legend">
+          <div class="legend-badge"><span class="legend-dot standard"></span> Standard</div>
+          <div class="legend-badge"><span class="legend-dot vip"></span> VIP (Row G)</div>
+          <div class="legend-badge"><span class="legend-dot accessible"></span> Accessible</div>
+          <div class="legend-badge"><span class="legend-dot sweet-spot">⭐</span> Sweet Spot</div>
+          <div class="legend-badge"><span class="legend-dot selected"></span> Current Seat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-Theatre HUD Bottom Floating Control Dock -->
+  <footer id="theatre-hud-bottom" class="hud-bottom glass-panel hide">
+    <div class="hud-dock-group">
+      <span class="dock-label">Camera Perspective:</span>
+      <div class="dock-buttons">
+        <button id="btn-cam-sweetspot" class="dock-btn active" title="Row D, Seat 8">
+          ⭐ Sweet Spot (D-8)
+        </button>
+        <button id="btn-cam-vip" class="dock-btn" title="Row G, Seat 8 VIP Recliner">
+          👑 VIP Recliner (G-8)
+        </button>
+        <button id="btn-cam-front" class="dock-btn" title="Row A, Seat 8 Front Row">
+          ⚡ Front Row (A-8)
+        </button>
+        <button id="btn-cam-overview" class="dock-btn" title="Free Orbit View">
+          🌐 Orbit View
+        </button>
+      </div>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <div class="hud-dock-group">
+      <span class="dock-label">Auditorium Lighting:</span>
+      <div class="dock-buttons">
+        <button id="btn-light-cinema" class="dock-btn active">
+          🎬 Cinema Mode
+        </button>
+        <button id="btn-light-house" class="dock-btn">
+          💡 House Lights
+        </button>
+        <button id="btn-light-blackout" class="dock-btn">
+          🌑 Blackout
+        </button>
+      </div>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <div class="hud-dock-group">
+      <span class="dock-label">Screen Controls:</span>
+      <div class="dock-buttons">
+        <button id="btn-toggle-video" class="dock-btn">
+          ⏯️ Play/Pause
+        </button>
+        <button id="btn-recenter" class="dock-btn">
+          🎯 Center View
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Seat Info Tooltip for Hover -->
+  <div id="seat-tooltip" class="seat-tooltip hide">
+    <div class="tooltip-id">Seat D-008</div>
+    <div class="tooltip-type">Standard Sweet Spot</div>
+    <div class="tooltip-hint">Click to sit here</div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

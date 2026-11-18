@@ -1,0 +1,20 @@
+{
+  "name": "3d-virtual-cinema-theatre",
+  "version": "1.0.0",
+  "description": "3D Virtual Cinema Theatre with YouTube CinemaScope Player and 2D Interactive Seating Matrix",
+  "scripts": {
+    "dev": "npm --prefix app run dev",
+    "build": "npm --prefix app run build",
+    "preview": "npm --prefix app run preview"
+  },
+  "keywords": [
+    "threejs",
+    "blender",
+    "virtual-cinema",
+    "css3d",
+    "cinemascope",
+    "youtube-player"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

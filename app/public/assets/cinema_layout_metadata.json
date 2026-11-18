@@ -1,0 +1,3383 @@
+{
+  "schema_version": "1.0",
+  "auditorium_id": "AUD_HORIZON_SCREEN_01",
+  "auditorium_name": "Horizon Cineplex - Auditorium 1 (Scope Grand)",
+  "layout_version": 1,
+  "units": "meters",
+  "coordinate_system": {
+    "up_axis": "Z",
+    "forward_axis": "-Y",
+    "origin": "auditorium_floor_front_center"
+  },
+  "engine_coordinate_mapping": {
+    "web_engine": "Three.js / React Three Fiber",
+    "web_up_axis": "Y",
+    "web_forward_axis": "-Z",
+    "note": "GLTF export automatically converts Blender +Z up to Three.js +Y up."
+  },
+  "dimensions": {
+    "width": 16.0,
+    "length": 22.0,
+    "height": 7.5
+  },
+  "screen": {
+    "name": "SCREEN_MAIN",
+    "center": [
+      0.0,
+      -2.3,
+      3.95
+    ],
+    "width": 13.5,
+    "height": 5.65,
+    "aspect_ratio": "2.39:1 (CinemaScope)",
+    "normal": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "film_still_texture": "cinema_screen_film_still.png",
+    "masking_frame": {
+      "border_width": 0.35,
+      "material": "Mat_Screen_Masking"
+    }
+  },
+  "helpers": {
+    "HELPER_AUDITORIUM_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "HELPER_SCREEN_CENTER": [
+      0.0,
+      -2.3,
+      3.95
+    ],
+    "HELPER_SCREEN_TL": [
+      -6.75,
+      -2.3,
+      6.775
+    ],
+    "HELPER_SCREEN_TR": [
+      6.75,
+      -2.3,
+      6.775
+    ],
+    "HELPER_SCREEN_BL": [
+      -6.75,
+      -2.3,
+      1.125
+    ],
+    "HELPER_SCREEN_BR": [
+      6.75,
+      -2.3,
+      1.125
+    ],
+    "HELPER_STAGE_CENTER": [
+      0.0,
+      -1.0,
+      0.45
+    ],
+    "HELPER_AISLE_LEFT_FRONT": [
+      -2.6,
+      3.5,
+      0.0
+    ],
+    "HELPER_AISLE_RIGHT_FRONT": [
+      2.6,
+      3.5,
+      0.0
+    ],
+    "HELPER_EXIT_REAR_LEFT": [
+      -5.5,
+      18.9,
+      2.66
+    ],
+    "HELPER_EXIT_REAR_RIGHT": [
+      5.5,
+      18.9,
+      2.66
+    ],
+    "HELPER_PROJECTOR_BOOTH": [
+      0.0,
+      18.8,
+      6.2
+    ]
+  },
+  "seating_summary": {
+    "total_seats": 105,
+    "rows_count": 7,
+    "rows": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ],
+    "seat_types": {
+      "STANDARD": 86,
+      "VIP_RECLINER": 15,
+      "ACCESSIBLE": 4
+    },
+    "accessible_seats_count": 4,
+    "companion_seats_count": 2
+  },
+  "seats": [
+    {
+      "seat_id": "A-001",
+      "label": "A01",
+      "row_label": "A",
+      "seat_number": 1,
+      "seat_type": "ACCESSIBLE",
+      "is_accessible": true,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        -5.6,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -5.6,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_001"
+    },
+    {
+      "seat_id": "A-002",
+      "label": "A02",
+      "row_label": "A",
+      "seat_number": 2,
+      "seat_type": "ACCESSIBLE",
+      "is_accessible": true,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        -5.0,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -5.0,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_002"
+    },
+    {
+      "seat_id": "A-003",
+      "label": "A03",
+      "row_label": "A",
+      "seat_number": 3,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": true,
+      "tier_level": "A",
+      "position": [
+        -4.4,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -4.4,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_003"
+    },
+    {
+      "seat_id": "A-004",
+      "label": "A04",
+      "row_label": "A",
+      "seat_number": 4,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        -3.8,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -3.8,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_004"
+    },
+    {
+      "seat_id": "A-005",
+      "label": "A05",
+      "row_label": "A",
+      "seat_number": 5,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        -1.8,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -1.8,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_005"
+    },
+    {
+      "seat_id": "A-006",
+      "label": "A06",
+      "row_label": "A",
+      "seat_number": 6,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        -1.2,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -1.2,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_006"
+    },
+    {
+      "seat_id": "A-007",
+      "label": "A07",
+      "row_label": "A",
+      "seat_number": 7,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        -0.6,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        -0.6,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_007"
+    },
+    {
+      "seat_id": "A-008",
+      "label": "A08",
+      "row_label": "A",
+      "seat_number": 8,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        0.0,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        0.0,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_008"
+    },
+    {
+      "seat_id": "A-009",
+      "label": "A09",
+      "row_label": "A",
+      "seat_number": 9,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        0.6,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        0.6,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_009"
+    },
+    {
+      "seat_id": "A-010",
+      "label": "A10",
+      "row_label": "A",
+      "seat_number": 10,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        1.2,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        1.2,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_010"
+    },
+    {
+      "seat_id": "A-011",
+      "label": "A11",
+      "row_label": "A",
+      "seat_number": 11,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        1.8,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        1.8,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_011"
+    },
+    {
+      "seat_id": "A-012",
+      "label": "A12",
+      "row_label": "A",
+      "seat_number": 12,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        3.8,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        3.8,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_012"
+    },
+    {
+      "seat_id": "A-013",
+      "label": "A13",
+      "row_label": "A",
+      "seat_number": 13,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        4.4,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        4.4,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_013"
+    },
+    {
+      "seat_id": "A-014",
+      "label": "A14",
+      "row_label": "A",
+      "seat_number": 14,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        5.0,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        5.0,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_014"
+    },
+    {
+      "seat_id": "A-015",
+      "label": "A15",
+      "row_label": "A",
+      "seat_number": 15,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "A",
+      "position": [
+        5.6,
+        4.0,
+        0.38
+      ],
+      "eye_point": [
+        5.6,
+        4.0,
+        1.53
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_A_015"
+    },
+    {
+      "seat_id": "B-001",
+      "label": "B01",
+      "row_label": "B",
+      "seat_number": 1,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -5.6,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -5.6,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_001"
+    },
+    {
+      "seat_id": "B-002",
+      "label": "B02",
+      "row_label": "B",
+      "seat_number": 2,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -5.0,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -5.0,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_002"
+    },
+    {
+      "seat_id": "B-003",
+      "label": "B03",
+      "row_label": "B",
+      "seat_number": 3,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -4.4,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -4.4,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_003"
+    },
+    {
+      "seat_id": "B-004",
+      "label": "B04",
+      "row_label": "B",
+      "seat_number": 4,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -3.8,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -3.8,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_004"
+    },
+    {
+      "seat_id": "B-005",
+      "label": "B05",
+      "row_label": "B",
+      "seat_number": 5,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -1.8,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -1.8,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_005"
+    },
+    {
+      "seat_id": "B-006",
+      "label": "B06",
+      "row_label": "B",
+      "seat_number": 6,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -1.2,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -1.2,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_006"
+    },
+    {
+      "seat_id": "B-007",
+      "label": "B07",
+      "row_label": "B",
+      "seat_number": 7,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        -0.6,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        -0.6,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_007"
+    },
+    {
+      "seat_id": "B-008",
+      "label": "B08",
+      "row_label": "B",
+      "seat_number": 8,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        0.0,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        0.0,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_008"
+    },
+    {
+      "seat_id": "B-009",
+      "label": "B09",
+      "row_label": "B",
+      "seat_number": 9,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        0.6,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        0.6,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_009"
+    },
+    {
+      "seat_id": "B-010",
+      "label": "B10",
+      "row_label": "B",
+      "seat_number": 10,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        1.2,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        1.2,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_010"
+    },
+    {
+      "seat_id": "B-011",
+      "label": "B11",
+      "row_label": "B",
+      "seat_number": 11,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        1.8,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        1.8,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_011"
+    },
+    {
+      "seat_id": "B-012",
+      "label": "B12",
+      "row_label": "B",
+      "seat_number": 12,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        3.8,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        3.8,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_012"
+    },
+    {
+      "seat_id": "B-013",
+      "label": "B13",
+      "row_label": "B",
+      "seat_number": 13,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        4.4,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        4.4,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_013"
+    },
+    {
+      "seat_id": "B-014",
+      "label": "B14",
+      "row_label": "B",
+      "seat_number": 14,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        5.0,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        5.0,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_014"
+    },
+    {
+      "seat_id": "B-015",
+      "label": "B15",
+      "row_label": "B",
+      "seat_number": 15,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "B",
+      "position": [
+        5.6,
+        5.2,
+        0.76
+      ],
+      "eye_point": [
+        5.6,
+        5.2,
+        1.91
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_B_015"
+    },
+    {
+      "seat_id": "C-001",
+      "label": "C01",
+      "row_label": "C",
+      "seat_number": 1,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -5.6,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -5.6,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_001"
+    },
+    {
+      "seat_id": "C-002",
+      "label": "C02",
+      "row_label": "C",
+      "seat_number": 2,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -5.0,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -5.0,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_002"
+    },
+    {
+      "seat_id": "C-003",
+      "label": "C03",
+      "row_label": "C",
+      "seat_number": 3,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -4.4,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -4.4,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_003"
+    },
+    {
+      "seat_id": "C-004",
+      "label": "C04",
+      "row_label": "C",
+      "seat_number": 4,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -3.8,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -3.8,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_004"
+    },
+    {
+      "seat_id": "C-005",
+      "label": "C05",
+      "row_label": "C",
+      "seat_number": 5,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -1.8,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -1.8,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_005"
+    },
+    {
+      "seat_id": "C-006",
+      "label": "C06",
+      "row_label": "C",
+      "seat_number": 6,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -1.2,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -1.2,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_006"
+    },
+    {
+      "seat_id": "C-007",
+      "label": "C07",
+      "row_label": "C",
+      "seat_number": 7,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        -0.6,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        -0.6,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_007"
+    },
+    {
+      "seat_id": "C-008",
+      "label": "C08",
+      "row_label": "C",
+      "seat_number": 8,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        0.0,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        0.0,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_008"
+    },
+    {
+      "seat_id": "C-009",
+      "label": "C09",
+      "row_label": "C",
+      "seat_number": 9,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        0.6,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        0.6,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_009"
+    },
+    {
+      "seat_id": "C-010",
+      "label": "C10",
+      "row_label": "C",
+      "seat_number": 10,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        1.2,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        1.2,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_010"
+    },
+    {
+      "seat_id": "C-011",
+      "label": "C11",
+      "row_label": "C",
+      "seat_number": 11,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        1.8,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        1.8,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_011"
+    },
+    {
+      "seat_id": "C-012",
+      "label": "C12",
+      "row_label": "C",
+      "seat_number": 12,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        3.8,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        3.8,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_012"
+    },
+    {
+      "seat_id": "C-013",
+      "label": "C13",
+      "row_label": "C",
+      "seat_number": 13,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        4.4,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        4.4,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_013"
+    },
+    {
+      "seat_id": "C-014",
+      "label": "C14",
+      "row_label": "C",
+      "seat_number": 14,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        5.0,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        5.0,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_014"
+    },
+    {
+      "seat_id": "C-015",
+      "label": "C15",
+      "row_label": "C",
+      "seat_number": 15,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "C",
+      "position": [
+        5.6,
+        6.4,
+        1.14
+      ],
+      "eye_point": [
+        5.6,
+        6.4,
+        2.29
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_C_015"
+    },
+    {
+      "seat_id": "D-001",
+      "label": "D01",
+      "row_label": "D",
+      "seat_number": 1,
+      "seat_type": "ACCESSIBLE",
+      "is_accessible": true,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        -5.6,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -5.6,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_001"
+    },
+    {
+      "seat_id": "D-002",
+      "label": "D02",
+      "row_label": "D",
+      "seat_number": 2,
+      "seat_type": "ACCESSIBLE",
+      "is_accessible": true,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        -5.0,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -5.0,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_002"
+    },
+    {
+      "seat_id": "D-003",
+      "label": "D03",
+      "row_label": "D",
+      "seat_number": 3,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": true,
+      "tier_level": "D",
+      "position": [
+        -4.4,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -4.4,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_003"
+    },
+    {
+      "seat_id": "D-004",
+      "label": "D04",
+      "row_label": "D",
+      "seat_number": 4,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        -3.8,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -3.8,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_004"
+    },
+    {
+      "seat_id": "D-005",
+      "label": "D05",
+      "row_label": "D",
+      "seat_number": 5,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        -1.8,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -1.8,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_005"
+    },
+    {
+      "seat_id": "D-006",
+      "label": "D06",
+      "row_label": "D",
+      "seat_number": 6,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        -1.2,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -1.2,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_006"
+    },
+    {
+      "seat_id": "D-007",
+      "label": "D07",
+      "row_label": "D",
+      "seat_number": 7,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        -0.6,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        -0.6,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_007"
+    },
+    {
+      "seat_id": "D-008",
+      "label": "D08",
+      "row_label": "D",
+      "seat_number": 8,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        0.0,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        0.0,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_008"
+    },
+    {
+      "seat_id": "D-009",
+      "label": "D09",
+      "row_label": "D",
+      "seat_number": 9,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        0.6,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        0.6,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_009"
+    },
+    {
+      "seat_id": "D-010",
+      "label": "D10",
+      "row_label": "D",
+      "seat_number": 10,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        1.2,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        1.2,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_010"
+    },
+    {
+      "seat_id": "D-011",
+      "label": "D11",
+      "row_label": "D",
+      "seat_number": 11,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        1.8,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        1.8,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_011"
+    },
+    {
+      "seat_id": "D-012",
+      "label": "D12",
+      "row_label": "D",
+      "seat_number": 12,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        3.8,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        3.8,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_012"
+    },
+    {
+      "seat_id": "D-013",
+      "label": "D13",
+      "row_label": "D",
+      "seat_number": 13,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        4.4,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        4.4,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_013"
+    },
+    {
+      "seat_id": "D-014",
+      "label": "D14",
+      "row_label": "D",
+      "seat_number": 14,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        5.0,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        5.0,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_014"
+    },
+    {
+      "seat_id": "D-015",
+      "label": "D15",
+      "row_label": "D",
+      "seat_number": 15,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "D",
+      "position": [
+        5.6,
+        7.6,
+        1.52
+      ],
+      "eye_point": [
+        5.6,
+        7.6,
+        2.67
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_D_015"
+    },
+    {
+      "seat_id": "E-001",
+      "label": "E01",
+      "row_label": "E",
+      "seat_number": 1,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -5.6,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -5.6,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_001"
+    },
+    {
+      "seat_id": "E-002",
+      "label": "E02",
+      "row_label": "E",
+      "seat_number": 2,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -5.0,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -5.0,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_002"
+    },
+    {
+      "seat_id": "E-003",
+      "label": "E03",
+      "row_label": "E",
+      "seat_number": 3,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -4.4,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -4.4,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_003"
+    },
+    {
+      "seat_id": "E-004",
+      "label": "E04",
+      "row_label": "E",
+      "seat_number": 4,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -3.8,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -3.8,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_004"
+    },
+    {
+      "seat_id": "E-005",
+      "label": "E05",
+      "row_label": "E",
+      "seat_number": 5,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -1.8,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -1.8,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_005"
+    },
+    {
+      "seat_id": "E-006",
+      "label": "E06",
+      "row_label": "E",
+      "seat_number": 6,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -1.2,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -1.2,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_006"
+    },
+    {
+      "seat_id": "E-007",
+      "label": "E07",
+      "row_label": "E",
+      "seat_number": 7,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        -0.6,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        -0.6,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_007"
+    },
+    {
+      "seat_id": "E-008",
+      "label": "E08",
+      "row_label": "E",
+      "seat_number": 8,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        0.0,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        0.0,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_008"
+    },
+    {
+      "seat_id": "E-009",
+      "label": "E09",
+      "row_label": "E",
+      "seat_number": 9,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        0.6,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        0.6,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_009"
+    },
+    {
+      "seat_id": "E-010",
+      "label": "E10",
+      "row_label": "E",
+      "seat_number": 10,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        1.2,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        1.2,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_010"
+    },
+    {
+      "seat_id": "E-011",
+      "label": "E11",
+      "row_label": "E",
+      "seat_number": 11,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        1.8,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        1.8,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_011"
+    },
+    {
+      "seat_id": "E-012",
+      "label": "E12",
+      "row_label": "E",
+      "seat_number": 12,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        3.8,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        3.8,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_012"
+    },
+    {
+      "seat_id": "E-013",
+      "label": "E13",
+      "row_label": "E",
+      "seat_number": 13,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        4.4,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        4.4,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_013"
+    },
+    {
+      "seat_id": "E-014",
+      "label": "E14",
+      "row_label": "E",
+      "seat_number": 14,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        5.0,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        5.0,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_014"
+    },
+    {
+      "seat_id": "E-015",
+      "label": "E15",
+      "row_label": "E",
+      "seat_number": 15,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "E",
+      "position": [
+        5.6,
+        8.8,
+        1.9
+      ],
+      "eye_point": [
+        5.6,
+        8.8,
+        3.05
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_E_015"
+    },
+    {
+      "seat_id": "F-001",
+      "label": "F01",
+      "row_label": "F",
+      "seat_number": 1,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -5.6,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -5.6,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_001"
+    },
+    {
+      "seat_id": "F-002",
+      "label": "F02",
+      "row_label": "F",
+      "seat_number": 2,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -5.0,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -5.0,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_002"
+    },
+    {
+      "seat_id": "F-003",
+      "label": "F03",
+      "row_label": "F",
+      "seat_number": 3,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -4.4,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -4.4,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_003"
+    },
+    {
+      "seat_id": "F-004",
+      "label": "F04",
+      "row_label": "F",
+      "seat_number": 4,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -3.8,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -3.8,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_004"
+    },
+    {
+      "seat_id": "F-005",
+      "label": "F05",
+      "row_label": "F",
+      "seat_number": 5,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -1.8,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -1.8,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_005"
+    },
+    {
+      "seat_id": "F-006",
+      "label": "F06",
+      "row_label": "F",
+      "seat_number": 6,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -1.2,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -1.2,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_006"
+    },
+    {
+      "seat_id": "F-007",
+      "label": "F07",
+      "row_label": "F",
+      "seat_number": 7,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        -0.6,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        -0.6,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_007"
+    },
+    {
+      "seat_id": "F-008",
+      "label": "F08",
+      "row_label": "F",
+      "seat_number": 8,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        0.0,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        0.0,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_008"
+    },
+    {
+      "seat_id": "F-009",
+      "label": "F09",
+      "row_label": "F",
+      "seat_number": 9,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        0.6,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        0.6,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_009"
+    },
+    {
+      "seat_id": "F-010",
+      "label": "F10",
+      "row_label": "F",
+      "seat_number": 10,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        1.2,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        1.2,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_010"
+    },
+    {
+      "seat_id": "F-011",
+      "label": "F11",
+      "row_label": "F",
+      "seat_number": 11,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        1.8,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        1.8,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_011"
+    },
+    {
+      "seat_id": "F-012",
+      "label": "F12",
+      "row_label": "F",
+      "seat_number": 12,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        3.8,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        3.8,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_012"
+    },
+    {
+      "seat_id": "F-013",
+      "label": "F13",
+      "row_label": "F",
+      "seat_number": 13,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        4.4,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        4.4,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_013"
+    },
+    {
+      "seat_id": "F-014",
+      "label": "F14",
+      "row_label": "F",
+      "seat_number": 14,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        5.0,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        5.0,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_014"
+    },
+    {
+      "seat_id": "F-015",
+      "label": "F15",
+      "row_label": "F",
+      "seat_number": 15,
+      "seat_type": "STANDARD",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "F",
+      "position": [
+        5.6,
+        10.0,
+        2.28
+      ],
+      "eye_point": [
+        5.6,
+        10.0,
+        3.43
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_F_015"
+    },
+    {
+      "seat_id": "G-001",
+      "label": "G01",
+      "row_label": "G",
+      "seat_number": 1,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -5.6,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -5.6,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_001"
+    },
+    {
+      "seat_id": "G-002",
+      "label": "G02",
+      "row_label": "G",
+      "seat_number": 2,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -5.0,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -5.0,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_002"
+    },
+    {
+      "seat_id": "G-003",
+      "label": "G03",
+      "row_label": "G",
+      "seat_number": 3,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -4.4,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -4.4,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_003"
+    },
+    {
+      "seat_id": "G-004",
+      "label": "G04",
+      "row_label": "G",
+      "seat_number": 4,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -3.8,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -3.8,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_004"
+    },
+    {
+      "seat_id": "G-005",
+      "label": "G05",
+      "row_label": "G",
+      "seat_number": 5,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -1.8,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -1.8,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_005"
+    },
+    {
+      "seat_id": "G-006",
+      "label": "G06",
+      "row_label": "G",
+      "seat_number": 6,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -1.2,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -1.2,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_006"
+    },
+    {
+      "seat_id": "G-007",
+      "label": "G07",
+      "row_label": "G",
+      "seat_number": 7,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        -0.6,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        -0.6,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_007"
+    },
+    {
+      "seat_id": "G-008",
+      "label": "G08",
+      "row_label": "G",
+      "seat_number": 8,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        0.0,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        0.0,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_008"
+    },
+    {
+      "seat_id": "G-009",
+      "label": "G09",
+      "row_label": "G",
+      "seat_number": 9,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        0.6,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        0.6,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_009"
+    },
+    {
+      "seat_id": "G-010",
+      "label": "G10",
+      "row_label": "G",
+      "seat_number": 10,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        1.2,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        1.2,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_010"
+    },
+    {
+      "seat_id": "G-011",
+      "label": "G11",
+      "row_label": "G",
+      "seat_number": 11,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        1.8,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        1.8,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_011"
+    },
+    {
+      "seat_id": "G-012",
+      "label": "G12",
+      "row_label": "G",
+      "seat_number": 12,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        3.8,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        3.8,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_012"
+    },
+    {
+      "seat_id": "G-013",
+      "label": "G13",
+      "row_label": "G",
+      "seat_number": 13,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        4.4,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        4.4,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_013"
+    },
+    {
+      "seat_id": "G-014",
+      "label": "G14",
+      "row_label": "G",
+      "seat_number": 14,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        5.0,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        5.0,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_014"
+    },
+    {
+      "seat_id": "G-015",
+      "label": "G15",
+      "row_label": "G",
+      "seat_number": 15,
+      "seat_type": "VIP_RECLINER",
+      "is_accessible": false,
+      "is_companion": false,
+      "tier_level": "G",
+      "position": [
+        5.6,
+        11.2,
+        2.66
+      ],
+      "eye_point": [
+        5.6,
+        11.2,
+        3.81
+      ],
+      "target": [
+        0.0,
+        -2.3,
+        3.95
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_reference": "SEAT_G_015"
+    }
+  ]
+}

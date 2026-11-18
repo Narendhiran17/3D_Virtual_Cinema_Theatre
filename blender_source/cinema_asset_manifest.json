@@ -1,0 +1,24 @@
+{
+  "asset_name": "cinema_theatre_auditorium",
+  "version": "1.1.0",
+  "timestamp": "2026-11-17T04:18:14Z",
+  "author": "Antigravity AI 3D Technical Artist",
+  "license": "Multi-Cinema Platform Production License",
+  "units": "meters",
+  "blender_version": "4.2.3 LTS",
+  "files": {
+    "blend_source": "cinema_theatre_auditorium.blend",
+    "web_glb": "cinema_theatre_auditorium.glb",
+    "layout_metadata": "cinema_layout_metadata.json",
+    "film_still": "cinema_screen_film_still.png"
+  },
+  "file_sizes_bytes": {
+    "blend": 10667432,
+    "glb": 6032288,
+    "metadata": 61720,
+    "film_still": 940576
+  },
+  "sha256": {
+    "glb": "f667b1306e413298d42358e4d2a278dc9f163c91cdec749ed91022219d68e969"
+  }
+}
