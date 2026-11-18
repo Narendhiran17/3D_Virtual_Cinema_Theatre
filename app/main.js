@@ -156,7 +156,7 @@ function init() {
 
   // 2. Camera
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
-  camera.position.set(0, 6.8, -13.5); // Start at high rear overview
+  camera.position.set(0, 5.2, -11.5); // Start safely inside high rear auditorium
   camera.lookAt(0, 3.8, 2.3);
 
   // 3. WebGL Renderer
@@ -177,13 +177,15 @@ function init() {
   cssRenderer.domElement.style.left = '0';
   css3dContainer.appendChild(cssRenderer.domElement);
 
-  // 5. OrbitControls
+  // 5. OrbitControls (Strictly bounded to auditorium interior)
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-  controls.maxPolarAngle = Math.PI / 2 + 0.05; // Prevent flipping below floor
-  controls.minDistance = 1.0;
-  controls.maxDistance = 35.0;
+  controls.enablePan = false; // Strictly prevent panning camera through meshes/walls
+  controls.minDistance = 0.5;
+  controls.maxDistance = 14.0; // Strictly prevent zooming out behind rear wall
+  controls.minPolarAngle = 0.15; // Prevent flipping over ceiling
+  controls.maxPolarAngle = Math.PI / 2 + 0.02; // Prevent flipping below floor
 
   // 6. Lighting Setup
   setupAuditoriumLights();
@@ -210,11 +212,11 @@ function setupAuditoriumLights() {
   // Ambient fill
   const ambientLight = new THREE.AmbientLight(0x181a24, 0.5);
   scene.add(ambientLight);
-  allLights.push({ light: ambientLight, baseIntensity: 0.5 });
+  allLights.push({ light: ambientLight, baseIntensity: 0.5, type: 'ambient' });
 
-  // Screen Projector Bounce Light (illuminates front auditorium with movie glow)
+  // Screen Projector Bounce Light (illuminates area directly in front of the screen)
   const screenBounceLight = new THREE.PointLight(0x7ea8f8, 35, 18, 1.2);
-  screenBounceLight.position.set(0, 4.0, 1.5);
+  screenBounceLight.position.set(0, 3.8, 1.6);
   scene.add(screenBounceLight);
   allLights.push({ light: screenBounceLight, baseIntensity: 35, type: 'screen' });
 
@@ -251,22 +253,51 @@ function applyLightingMode(mode) {
 
   allLights.forEach(({ light, baseIntensity, type }) => {
     if (mode === 'cinema') {
-      if (type === 'house') light.intensity = baseIntensity * 0.15; // Dim warm cove
-      else if (type === 'step') light.intensity = baseIntensity * 0.8; // Warm steps
-      else if (type === 'screen') light.intensity = baseIntensity * 1.0; // Movie bounce
-      else light.intensity = baseIntensity * 0.4;
+      // Cinema Mode: Looks like dark mode - zero ceiling lights, faint step LEDs, movie screen projection
+      if (type === 'house') {
+        light.intensity = 0.0; // All 9 ceiling downlights completely off
+      } else if (type === 'step') {
+        light.intensity = baseIntensity * 0.08; // Very faint step floor guide LEDs
+      } else if (type === 'screen') {
+        light.intensity = baseIntensity * 0.95; // Projection glow across auditorium
+        light.distance = 16.0;
+      } else {
+        // Ambient fill
+        light.intensity = baseIntensity * 0.05; // Very dim indirect ambient
+      }
     } else if (mode === 'house') {
-      light.intensity = baseIntensity * 1.2; // Full architectural lights
+      // House Lights: Bright warm architectural illumination
+      if (type === 'house') light.intensity = baseIntensity * 1.2;
+      else if (type === 'step') light.intensity = baseIntensity * 1.0;
+      else if (type === 'screen') light.intensity = baseIntensity * 0.2;
+      else light.intensity = baseIntensity * 1.0;
     } else if (mode === 'blackout') {
-      if (type === 'screen') light.intensity = baseIntensity * 0.6;
-      else if (type === 'step') light.intensity = baseIntensity * 0.2;
-      else light.intensity = 0.0;
+      // Dark Mode (Blackout): Completely dark! NO light shown except movie screen reflection directly in front of the screen
+      if (type === 'screen') {
+        light.intensity = baseIntensity * 0.85; // Movie screen projection reflection
+        light.distance = 8.0; // Constrained strictly to the front area directly in front of screen
+      } else {
+        light.intensity = 0.0; // Completely off (no house downlights, no step LEDs, no ambient fill)
+      }
     }
   });
 
+  // Adjust background void color to match atmosphere
+  if (scene) {
+    if (mode === 'blackout') {
+      scene.background.setHex(0x000000); // Absolute pitch black
+    } else if (mode === 'cinema') {
+      scene.background.setHex(0x010103); // Deep dark cinematic void
+    } else {
+      scene.background.setHex(0x0a0c14); // Warm architectural ambience
+    }
+  }
+
   // Update HUD active button
-  document.querySelectorAll('#theatre-hud-bottom .hud-dock-group:nth-child(3) .dock-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.id.includes(mode));
+  document.querySelectorAll('#theatre-hud-bottom .dock-btn').forEach(btn => {
+    if (btn.id.startsWith('btn-light-')) {
+      btn.classList.toggle('active', btn.id.includes(mode));
+    }
   });
 }
 
@@ -734,17 +765,41 @@ function moveToOverview() {
   state.isOrbitMode = true;
   camTarget.startPos.copy(camera.position);
   camTarget.startLookAt.copy(controls.target);
-  camTarget.pos.set(0, 6.8, -13.5);
+  // Comfortably inside the high rear VIP area of the auditorium (safe from walls and ceiling)
+  camTarget.pos.set(0, 5.2, -11.5);
   camTarget.lookAt.set(0, 3.8, 2.3);
   camTarget.duration = 1.8;
   camTarget.elapsed = 0;
   camTarget.active = true;
   controls.enabled = false;
 
-  document.getElementById('hud-seat-info').textContent = '🌐 Orbit Perspective (Free Camera)';
+  document.getElementById('hud-seat-info').textContent = '🌐 Orbit Perspective (Inside Theatre)';
   document.querySelectorAll('#theatre-hud-bottom .dock-buttons:first-child .dock-btn').forEach(btn => {
     btn.classList.toggle('active', btn.id === 'btn-cam-overview');
   });
+}
+
+// Strictly clamp camera inside the auditorium interior so it never clips through meshes or leaves the theatre
+function clampCameraInsideTheatre() {
+  // Auditorium interior bounds in Three.js coordinates:
+  // Interior Width: X from -6.6m to +6.6m (Side walls at +/-8.0m)
+  // Interior Height: Y from 1.35m to 5.8m (Floor ~1.0m to 3.8m, Ceiling 7.5m)
+  // Interior Depth: Z from -12.2m to +1.2m (Screen +2.29m, Back wall -13.8m)
+  const minX = -6.6;
+  const maxX = 6.6;
+  const minY = 1.35;
+  const maxY = 5.8;
+  const minZ = -12.2;
+  const maxZ = 1.2;
+
+  camera.position.x = THREE.MathUtils.clamp(camera.position.x, minX, maxX);
+  camera.position.y = THREE.MathUtils.clamp(camera.position.y, minY, maxY);
+  camera.position.z = THREE.MathUtils.clamp(camera.position.z, minZ, maxZ);
+
+  // Keep target focused within the cinema screen / front auditorium area
+  controls.target.x = THREE.MathUtils.clamp(controls.target.x, -4.5, 4.5);
+  controls.target.y = THREE.MathUtils.clamp(controls.target.y, 1.8, 5.2);
+  controls.target.z = THREE.MathUtils.clamp(controls.target.z, -8.0, 2.3);
 }
 
 // =============================================================================
@@ -1212,6 +1267,7 @@ function animate() {
     }
   } else {
     controls.update();
+    clampCameraInsideTheatre();
   }
 
   // Render both WebGL and CSS3D scenes
