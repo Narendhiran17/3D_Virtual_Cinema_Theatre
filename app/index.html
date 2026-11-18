@@ -51,10 +51,18 @@
             </div>
 
             <div class="input-group">
-              <label for="input-youtube-url">
-                <span class="label-icon">▶️</span> YouTube Trailer URL or Video ID
-              </label>
-              <input type="text" id="input-youtube-url" placeholder="Paste YouTube link (e.g. https://www.youtube.com/watch?v=zSWdZVtXT7E)" value="https://www.youtube.com/watch?v=zSWdZVtXT7E" autocomplete="off">
+              <div class="input-label-row">
+                <label for="input-youtube-url">
+                  <span class="label-icon">▶️</span> Trailer Video Source
+                </label>
+                <label for="input-local-video" class="file-picker-label" title="Upload or test a local video file from your PC">
+                  📁 Browse Local File
+                </label>
+                <input type="file" id="input-local-video" accept="video/mp4,video/webm,video/ogg,video/quicktime,video/*" style="display: none;">
+              </div>
+              <input type="text" id="input-youtube-url" placeholder="YouTube link, Vimeo link, or direct MP4/WebM URL" value="https://www.youtube.com/watch?v=zSWdZVtXT7E" autocomplete="off">
+              <div id="local-video-selected-badge" class="local-file-badge" style="display: none;"></div>
+              <p class="input-subhint">Supports YouTube links (all formats), Vimeo, direct MP4/WebM/MOV video streams, or local files.</p>
             </div>
 
             <!-- Quick Trailer Presets -->
@@ -75,6 +83,15 @@
                 </button>
                 <button type="button" class="preset-btn" data-title="The Batman (Main Trailer 4K)" data-url="https://www.youtube.com/watch?v=mqqft2x_Aa4">
                   🦇 The Batman
+                </button>
+                <button type="button" class="preset-btn preset-direct" data-title="Sintel • 4K CinemaScope Trailer" data-url="./assets/sample_trailer.mp4">
+                  🎞️ Sintel Cinema (Local MP4)
+                </button>
+                <button type="button" class="preset-btn preset-direct" data-title="Oceans • 4K Special Presentation" data-url="https://vjs.zencdn.net/v/oceans.mp4">
+                  🌊 Oceans (Direct MP4)
+                </button>
+                <button type="button" class="preset-btn preset-direct" data-title="Sintel Trailer • Open Media Stream" data-url="https://media.w3.org/2010/05/sintel/trailer.mp4">
+                  🐉 Sintel (Web Stream)
                 </button>
               </div>
             </div>
@@ -264,6 +281,9 @@
     <div class="tooltip-type">Standard Sweet Spot</div>
     <div class="tooltip-hint">Click to sit here</div>
   </div>
+
+  <!-- Toast Notification -->
+  <div id="theatre-toast" class="toast-notification"></div>
 
   <script type="module" src="./main.js"></script>
 </body>
