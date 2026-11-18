@@ -97,6 +97,22 @@
               </div>
             </div>
 
+            <!-- Interactive Concession Snack Pack Selection -->
+            <div class="concessions-lobby-section">
+              <label class="presets-label"><span class="label-icon">🍿</span> Select Seat Concession Snack Pack:</label>
+              <div class="concession-chips">
+                <button type="button" class="concession-btn active" data-snack="butter">
+                  🍿 Classic Butter Popcorn & Soda
+                </button>
+                <button type="button" class="concession-btn" data-snack="caramel">
+                  🍫 Caramel Crunch & Cola
+                </button>
+                <button type="button" class="concession-btn" data-snack="vip">
+                  👑 VIP Truffle & Champagne
+                </button>
+              </div>
+            </div>
+
             <div class="theatre-spec-chips">
               <span class="spec-pill">🔊 Dolby Atmos 9.1.4</span>
               <span class="spec-pill">📐 2.39:1 CinemaScope</span>
@@ -179,10 +195,20 @@
         <span class="pill-icon">🪑</span>
         <span id="hud-seat-info">Row D, Seat 8 (Acoustic Sweet Spot)</span>
       </div>
+      <div id="hud-snack-pill" class="seat-active-pill snack-pill" title="Click popcorn or drink on your armrest to eat!">
+        <span class="pill-icon">🍿</span>
+        <span id="hud-snack-text">Armrest Snacks: Ready</span>
+      </div>
     </div>
 
     <div class="hud-right">
-      <button id="btn-hud-seatmap" class="hud-btn primary">
+      <button id="btn-hud-watchparty" class="hud-btn primary" title="Multiplayer Watch Party & Share Link">
+        <span>👥</span> Watch Party
+      </button>
+      <button id="btn-hud-vr" class="hud-btn vr-btn" title="Enter Virtual Reality in WebXR">
+        <span>🕶️</span> Enter VR
+      </button>
+      <button id="btn-hud-seatmap" class="hud-btn secondary">
         <span>🪑</span> Seat Map
       </button>
       <button id="btn-change-movie" class="hud-btn secondary">
@@ -224,6 +250,57 @@
     </div>
   </div>
 
+  <!-- Watch Party Modal -->
+  <div id="watch-party-modal" class="modal-backdrop">
+    <div class="watch-party-card glass-panel">
+      <div class="watch-party-header">
+        <div class="watch-party-title">
+          <span class="badge-icon">👥</span>
+          <div>
+            <h3>Multiplayer Watch Party</h3>
+            <span class="modal-subtitle">Synchronized cinema viewing with live 3D reactions & shared seats</span>
+          </div>
+        </div>
+        <button id="btn-close-watchparty" class="modal-close-btn" title="Close Watch Party">✕</button>
+      </div>
+
+      <div class="watch-party-body">
+        <div class="party-status-row">
+          <div class="party-status-badge">
+            <span class="pulsing-dot"></span>
+            <span id="party-room-name">Room: Horizon-Cinema</span>
+          </div>
+          <div class="party-viewers-count">
+            <span id="party-viewers-text">👥 1 Cinephile Connected</span>
+          </div>
+        </div>
+
+        <div class="room-share-box">
+          <label class="presets-label">Shareable Watch Party Invite Link:</label>
+          <div class="room-input-group">
+            <input type="text" id="watch-party-link-input" readonly value="">
+            <button id="btn-copy-party-link" class="btn-copy-link">
+              <span>📋</span> Copy Link
+            </button>
+          </div>
+          <p class="input-subhint">Share this link with friends or open in a new browser tab to test synchronized playback and floating 3D seat reactions!</p>
+        </div>
+
+        <div class="party-controls-box">
+          <label class="presets-label">Host Sync & Broadcast Controls:</label>
+          <div class="party-action-buttons">
+            <button id="btn-party-sync-play" class="dock-btn active">
+              🔄 Force Sync All Viewers
+            </button>
+            <button id="btn-party-new-room" class="dock-btn">
+              🎲 Create New Room
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- In-Theatre HUD Bottom Floating Control Dock -->
   <footer id="theatre-hud-bottom" class="hud-bottom glass-panel hide">
     <div class="hud-dock-group">
@@ -258,6 +335,33 @@
         <button id="btn-light-blackout" class="dock-btn" title="Pitch black - Screen reflections only">
           🌑 Dark Mode
         </button>
+      </div>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <div class="hud-dock-group">
+      <span class="dock-label">Cinema FX:</span>
+      <div class="dock-buttons">
+        <button id="btn-toggle-ambilight" class="dock-btn active" title="Reactive Screen Ambilight bounce on auditorium walls">
+          ✨ Ambilight: ON
+        </button>
+        <button id="btn-toggle-spatial" class="dock-btn active" title="Web Audio API 3D Positional Audio & Dolby Atmos Simulation">
+          🔊 Spatial 3D: ON
+        </button>
+      </div>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <div class="hud-dock-group">
+      <span class="dock-label">3D Reactions:</span>
+      <div class="dock-buttons reaction-dock-buttons">
+        <button class="reaction-btn" data-reaction="🍿" title="Send Popcorn">🍿</button>
+        <button class="reaction-btn" data-reaction="👏" title="Send Applause">👏</button>
+        <button class="reaction-btn" data-reaction="🔥" title="Send Fire">🔥</button>
+        <button class="reaction-btn" data-reaction="😱" title="Send Shock">😱</button>
+        <button class="reaction-btn" data-reaction="❤️" title="Send Love">❤️</button>
       </div>
     </div>
 
