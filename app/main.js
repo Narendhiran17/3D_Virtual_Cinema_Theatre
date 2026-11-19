@@ -40,6 +40,7 @@ const state = {
   sodaSips: 0,
   isMuted: false,
   pendingYouTubeLoad: null,
+  waitingForYouTubeClipboard: false,
 };
 
 let scene, cssScene, camera, cameraRig, renderer, cssRenderer, controls;
@@ -2143,6 +2144,61 @@ function sync2DSeatMapSelection(seatId) {
 }
 
 // =============================================================================
+// YOUTUBE LINK FETCHER & CLIPBOARD AUTO-DETECTION SYSTEM
+// =============================================================================
+function applyPastedYouTubeLink(rawText, source = 'auto') {
+  if (!rawText) return false;
+  const trimmed = rawText.trim();
+  const ytId = extractYouTubeId(trimmed);
+  if (!ytId) {
+    if (source === 'manual') {
+      showToast('⚠️ No valid YouTube video link found in clipboard.', 3500);
+    }
+    return false;
+  }
+
+  const urlInput = document.getElementById('input-youtube-url');
+  if (!urlInput) return false;
+
+  const currentVal = urlInput.value.trim();
+  if (currentVal === trimmed) {
+    if (source === 'manual') {
+      showToast('ℹ️ This YouTube video link is already loaded!', 2500);
+    }
+    return true;
+  }
+
+  urlInput.value = trimmed;
+  urlInput.classList.remove('input-highlight-flash');
+  void urlInput.offsetWidth; // trigger reflow for CSS flash animation
+  urlInput.classList.add('input-highlight-flash');
+
+  const titleInput = document.getElementById('input-movie-title');
+  showToast('📋 YouTube link auto-filled! Fetching video title...', 2500);
+
+  // Fetch title from YouTube public oEmbed API
+  fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${ytId}&format=json`)
+    .then(r => r.json())
+    .then(data => {
+      if (data && data.title) {
+        if (titleInput) {
+          titleInput.value = data.title;
+        }
+        showToast(`🎬 Loaded: "${data.title}"`, 4000);
+      }
+    })
+    .catch(() => {
+      showToast('🎬 YouTube video loaded into link field!', 2500);
+    });
+
+  const banner = document.getElementById('yt-detect-banner');
+  if (banner) banner.classList.add('hide');
+  state.waitingForYouTubeClipboard = false;
+
+  return true;
+}
+
+// =============================================================================
 // UI EVENT LISTENERS
 // =============================================================================
 function setupEventListeners() {
@@ -2150,21 +2206,72 @@ function setupEventListeners() {
   window.addEventListener('pointermove', handlePointerMove);
   window.addEventListener('pointerdown', handlePointerDown);
 
-  // Preset Buttons in Lobby
-  const presetBtns = document.querySelectorAll('.preset-btn');
-  presetBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      presetBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  // "Get the YouTube Link" Button (Opens YouTube & listens for copied link)
+  const btnGetYtLink = document.getElementById('btn-get-youtube-link');
+  if (btnGetYtLink) {
+    btnGetYtLink.addEventListener('click', () => {
+      state.waitingForYouTubeClipboard = true;
 
-      const title = btn.getAttribute('data-title');
-      const url = btn.getAttribute('data-url');
-      document.getElementById('input-movie-title').value = title;
-      document.getElementById('input-youtube-url').value = url;
+      // Show listening animation banner
+      const banner = document.getElementById('yt-detect-banner');
+      if (banner) banner.classList.remove('hide');
 
-      const badge = document.getElementById('local-video-selected-badge');
-      if (badge) badge.style.display = 'none';
+      // Open YouTube in a new tab
+      window.open('https://www.youtube.com', '_blank');
+
+      showToast('🌐 Opening YouTube... Find any video, click "Share ➔ Copy Link", then switch back here!', 6000);
     });
+  }
+
+  // "Paste from Clipboard" Button
+  const btnPasteClipboard = document.getElementById('btn-paste-clipboard');
+  if (btnPasteClipboard) {
+    btnPasteClipboard.addEventListener('click', async () => {
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        showToast('⚠️ Clipboard access not supported. You can press Ctrl+V to paste into the field.', 4000);
+        return;
+      }
+
+      try {
+        const text = await navigator.clipboard.readText();
+        const success = applyPastedYouTubeLink(text, 'manual');
+        if (!success) {
+          showToast('⚠️ Clipboard does not contain a YouTube link. Copy a link from YouTube first!', 4000);
+        }
+      } catch (err) {
+        console.warn('Clipboard read error:', err);
+        showToast('⚠️ Clipboard permission needed. Press Ctrl+V in the field to paste.', 4000);
+      }
+    });
+  }
+
+  // Automatic Clipboard Detection on Tab Focus / Window Switch
+  const autoDetectClipboard = async () => {
+    const lobbyModal = document.getElementById('lobby-modal');
+    const isLobbyActive = lobbyModal && lobbyModal.classList.contains('active');
+
+    // Only auto-check if user requested a link or is on the lobby screen
+    if (!state.waitingForYouTubeClipboard && !isLobbyActive) return;
+    if (!navigator.clipboard || !navigator.clipboard.readText) return;
+
+    try {
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        const ytId = extractYouTubeId(text.trim());
+        if (ytId) {
+          applyPastedYouTubeLink(text, 'auto');
+        }
+      }
+    } catch (err) {
+      // Permission-gated background reads fail silently
+    }
+  };
+
+  window.addEventListener('focus', autoDetectClipboard);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      autoDetectClipboard();
+    }
   });
 
   // Concession Pack Selector in Lobby
@@ -2199,7 +2306,6 @@ function setupEventListeners() {
           badge.style.display = 'inline-flex';
         }
 
-        presetBtns.forEach(b => b.classList.remove('active'));
         showToast(`Loaded local trailer: ${file.name}`);
       }
     });
@@ -2416,12 +2522,6 @@ function setupEventListeners() {
       debounceTimer = setTimeout(() => {
         const val = ytInput.value.trim();
         if (!val) return;
-
-        // Deselect presets if custom input entered
-        const isPreset = Array.from(presetBtns).some(b => b.getAttribute('data-url') === val);
-        if (!isPreset) {
-          presetBtns.forEach(b => b.classList.remove('active'));
-        }
 
         const parsed = parseVideoSource(val);
         if (parsed.type === 'youtube') {

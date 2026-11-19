@@ -63,37 +63,24 @@
               </div>
               <input type="text" id="input-youtube-url" placeholder="YouTube link, Vimeo link, or direct MP4/WebM URL" value="https://www.youtube.com/watch?v=zSWdZVtXT7E" autocomplete="off">
               <div id="local-video-selected-badge" class="local-file-badge" style="display: none;"></div>
-              <p class="input-subhint">Supports YouTube links (all formats), Vimeo, direct MP4/WebM/MOV video streams, or local files.</p>
+              <p class="input-subhint">Paste any YouTube URL, or click the button below to browse YouTube and auto-fill!</p>
             </div>
 
-            <!-- Quick Trailer Presets -->
-            <div class="presets-section">
-              <label class="presets-label">Popular 4K Trailer Presets (Click to Load):</label>
-              <div class="preset-chips">
-                <button type="button" class="preset-btn active" data-title="Interstellar (4K Trailer)" data-url="https://www.youtube.com/watch?v=zSWdZVtXT7E">
-                  🌌 Interstellar
+            <!-- YouTube Quick Fetcher & Auto-Clipboard Link Loader -->
+            <div class="youtube-fetcher-section">
+              <div class="fetcher-buttons-row">
+                <button type="button" id="btn-get-youtube-link" class="get-yt-btn" title="Open YouTube in a new tab to find any trailer or video">
+                  <span class="btn-icon">▶️</span>
+                  <span class="btn-text">Get the YouTube Link</span>
+                  <span class="btn-arrow">↗</span>
                 </button>
-                <button type="button" class="preset-btn" data-title="Dune: Part Two (Official Trailer)" data-url="https://www.youtube.com/watch?v=Way9Dexny3w">
-                  🏜️ Dune: Part Two
+                <button type="button" id="btn-paste-clipboard" class="paste-yt-btn" title="Paste copied YouTube link from clipboard immediately">
+                  📋 Paste from Clipboard
                 </button>
-                <button type="button" class="preset-btn" data-title="Avatar: The Way of Water (4K Trailer)" data-url="https://www.youtube.com/watch?v=d9MyW72ELq0">
-                  🌊 Avatar 2
-                </button>
-                <button type="button" class="preset-btn" data-title="Top Gun: Maverick (4K Trailer)" data-url="https://www.youtube.com/watch?v=giXco2jaZ_4">
-                  ✈️ Top Gun: Maverick
-                </button>
-                <button type="button" class="preset-btn" data-title="The Batman (Main Trailer 4K)" data-url="https://www.youtube.com/watch?v=mqqft2x_Aa4">
-                  🦇 The Batman
-                </button>
-                <button type="button" class="preset-btn preset-direct" data-title="Sintel • 4K CinemaScope Trailer" data-url="./assets/sample_trailer.mp4">
-                  🎞️ Sintel Cinema (Local MP4)
-                </button>
-                <button type="button" class="preset-btn preset-direct" data-title="Oceans • 4K Special Presentation" data-url="https://vjs.zencdn.net/v/oceans.mp4">
-                  🌊 Oceans (Direct MP4)
-                </button>
-                <button type="button" class="preset-btn preset-direct" data-title="Sintel Trailer • Open Media Stream" data-url="https://media.w3.org/2010/05/sintel/trailer.mp4">
-                  🐉 Sintel (Web Stream)
-                </button>
+              </div>
+              <div id="yt-detect-banner" class="yt-auto-detect-banner hide">
+                <div class="detect-pulse-dot"></div>
+                <span class="detect-text">Listening for copied YouTube link... (In YouTube, click <b>Share ➔ Copy Link</b>, then switch back here)</span>
               </div>
             </div>
 
