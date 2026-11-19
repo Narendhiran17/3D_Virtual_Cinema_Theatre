@@ -742,19 +742,39 @@ html, body {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Bottom Floating Control Dock */
+/* Bottom Floating Control Dock (Responsive & Click-Isolated) */
 .hud-bottom {
   position: fixed;
-  bottom: 20px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  border-radius: 30px;
+  border-radius: 28px;
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  gap: 14px;
+  padding: 6px 14px;
+  gap: 10px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(229, 185, 88, 0.4) transparent;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 16px rgba(229, 185, 88, 0.15);
   transition: transform 0.4s ease, opacity 0.4s ease;
+  pointer-events: auto;
+}
+
+.hud-bottom::-webkit-scrollbar {
+  height: 4px;
+}
+.hud-bottom::-webkit-scrollbar-thumb {
+  background: rgba(229, 185, 88, 0.4);
+  border-radius: 4px;
+}
+.hud-bottom::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .hud-bottom.hide {
@@ -766,7 +786,8 @@ html, body {
 .hud-dock-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .dock-label {
@@ -774,30 +795,36 @@ html, body {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-right: 4px;
+  margin-right: 2px;
+  white-space: nowrap;
+  font-weight: 600;
 }
 
 .dock-buttons {
   display: flex;
-  gap: 6px;
+  gap: 5px;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .dock-btn {
-  padding: 7px 12px;
-  border-radius: 20px;
+  padding: 6px 11px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #c9cee0;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .dock-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.16);
   color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .dock-btn.active {
@@ -810,8 +837,9 @@ html, body {
 
 .dock-divider {
   width: 1px;
-  height: 24px;
+  height: 20px;
   background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
 }
 
 /* Hover Tooltip */
@@ -965,6 +993,68 @@ html, body {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
   pointer-events: auto;
+}
+
+/* Embed Restriction Alert Modal */
+.embed-restriction-modal {
+  position: fixed;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 620px;
+  width: 92%;
+  padding: 18px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(229, 185, 88, 0.5);
+  background: rgba(16, 17, 26, 0.96);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 25px rgba(200, 29, 52, 0.35);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s ease;
+}
+
+.embed-restriction-modal.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-20px);
+}
+
+.restriction-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.restriction-icon {
+  font-size: 1.5rem;
+}
+
+.restriction-header h3 {
+  font-size: 1.05rem;
+  color: var(--accent-gold);
+  letter-spacing: 1.5px;
+}
+
+.restriction-message {
+  font-size: 0.92rem;
+  color: var(--text-main);
+  line-height: 1.45;
+}
+
+.restriction-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.restriction-actions a.dock-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* =============================================================================
@@ -1195,6 +1285,28 @@ html, body {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1280px) {
+  .hud-bottom {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    gap: 8px 10px;
+    max-width: calc(100vw - 20px);
+    bottom: 10px;
+    overflow-x: visible;
+  }
+  .dock-divider {
+    display: none;
+  }
+  .hud-dock-group {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 3px 6px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
 @media (max-width: 768px) {
   .lobby-card {
     padding: 24px 20px;
@@ -1203,9 +1315,17 @@ html, body {
     grid-template-columns: 1fr;
   }
   .hud-bottom {
-    flex-wrap: wrap;
-    border-radius: var(--radius-md);
-    width: calc(100% - 32px);
-    bottom: 12px;
+    bottom: 8px;
+    padding: 6px 8px;
+    gap: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .dock-btn {
+    padding: 5px 8px;
+    font-size: 10.5px;
+  }
+  .dock-label {
+    display: none;
   }
 }

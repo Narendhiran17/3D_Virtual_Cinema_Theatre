@@ -302,60 +302,86 @@
   </div>
 
   <!-- In-Theatre HUD Bottom Floating Control Dock -->
+  <!-- Bottom Floating Control Dock (Responsive, Compact & Click-Isolated) -->
   <footer id="theatre-hud-bottom" class="hud-bottom glass-panel hide">
-    <div class="hud-dock-group">
-      <span class="dock-label">Camera Perspective:</span>
+    <!-- 1. Screen Playback & Audio (Primary Cinema Controls) -->
+    <div class="hud-dock-group hud-group-screen">
+      <span class="dock-label">Screen:</span>
       <div class="dock-buttons">
-        <button id="btn-cam-sweetspot" class="dock-btn active" title="Row D, Seat 8">
-          ⭐ Sweet Spot (D-8)
+        <button id="btn-toggle-video" class="dock-btn" title="Play or Pause Trailer">
+          ⏯️ Play/Pause
         </button>
-        <button id="btn-cam-vip" class="dock-btn" title="Row G, Seat 8 VIP Recliner">
-          👑 VIP Recliner (G-8)
+        <button id="btn-toggle-mute" class="dock-btn" title="Toggle Audio Mute">
+          🔊 Audio
         </button>
-        <button id="btn-cam-front" class="dock-btn" title="Row A, Seat 8 Front Row">
-          ⚡ Front Row (A-8)
+        <button id="btn-reload-video" class="dock-btn" title="Reload Trailer Stream">
+          🔄 Reload
         </button>
-        <button id="btn-cam-overview" class="dock-btn" title="Free Orbit View">
-          🌐 Orbit View
+        <button id="btn-recenter" class="dock-btn" title="Re-center View on Screen">
+          🎯 Center
         </button>
       </div>
     </div>
 
     <div class="dock-divider"></div>
 
-    <div class="hud-dock-group">
-      <span class="dock-label">Auditorium Lighting:</span>
+    <!-- 2. Camera Perspectives -->
+    <div class="hud-dock-group hud-group-camera">
+      <span class="dock-label">Camera:</span>
       <div class="dock-buttons">
-        <button id="btn-light-cinema" class="dock-btn active">
-          🎬 Cinema Mode
+        <button id="btn-cam-sweetspot" class="dock-btn active" title="Row D, Seat 8 (Acoustic Sweet Spot)">
+          ⭐ Sweet Spot
         </button>
-        <button id="btn-light-house" class="dock-btn">
-          💡 House Lights
+        <button id="btn-cam-vip" class="dock-btn" title="Row G, Seat 8 (VIP Luxury Recliner)">
+          👑 VIP
         </button>
-        <button id="btn-light-blackout" class="dock-btn" title="Pitch black - Screen reflections only">
-          🌑 Dark Mode
+        <button id="btn-cam-front" class="dock-btn" title="Row A, Seat 8 (Front Row View)">
+          ⚡ Front
+        </button>
+        <button id="btn-cam-overview" class="dock-btn" title="Free 3D Orbit View">
+          🌐 Orbit
         </button>
       </div>
     </div>
 
     <div class="dock-divider"></div>
 
-    <div class="hud-dock-group">
-      <span class="dock-label">Cinema FX:</span>
+    <!-- 3. Lighting Modes -->
+    <div class="hud-dock-group hud-group-lighting">
+      <span class="dock-label">Lighting:</span>
       <div class="dock-buttons">
-        <button id="btn-toggle-ambilight" class="dock-btn active" title="Reactive Screen Ambilight bounce on auditorium walls">
-          ✨ Ambilight: ON
+        <button id="btn-light-cinema" class="dock-btn active" title="Cinema Mode (Focused Projection)">
+          🎬 Cinema
         </button>
-        <button id="btn-toggle-spatial" class="dock-btn active" title="Web Audio API 3D Positional Audio & Dolby Atmos Simulation">
-          🔊 Spatial 3D: ON
+        <button id="btn-light-house" class="dock-btn" title="House Lights (Ambient Warm Glow)">
+          💡 House
+        </button>
+        <button id="btn-light-blackout" class="dock-btn" title="Dark Mode (Pitch Black Reflections)">
+          🌑 Dark
         </button>
       </div>
     </div>
 
     <div class="dock-divider"></div>
 
-    <div class="hud-dock-group">
-      <span class="dock-label">3D Reactions:</span>
+    <!-- 4. Cinema FX & Spatial Audio -->
+    <div class="hud-dock-group hud-group-fx">
+      <span class="dock-label">FX:</span>
+      <div class="dock-buttons">
+        <button id="btn-toggle-ambilight" class="dock-btn active" title="Reactive Screen Ambilight bounce on walls">
+          ✨ Ambilight
+        </button>
+        <button id="btn-toggle-spatial" class="dock-btn active" title="Dolby Atmos 3D Spatial Audio Simulation">
+          🔊 Spatial
+        </button>
+      </div>
+    </div>
+
+    <div class="dock-divider"></div>
+
+    <!-- 5. 3D Floating Reactions -->
+    <div class="hud-dock-group hud-group-reactions">
+      <span class="dock-label">React:</span>
       <div class="dock-buttons reaction-dock-buttons">
         <button class="reaction-btn" data-reaction="🍿" title="Send Popcorn">🍿</button>
         <button class="reaction-btn" data-reaction="👏" title="Send Applause">👏</button>
@@ -364,21 +390,32 @@
         <button class="reaction-btn" data-reaction="❤️" title="Send Love">❤️</button>
       </div>
     </div>
-
-    <div class="dock-divider"></div>
-
-    <div class="hud-dock-group">
-      <span class="dock-label">Screen Controls:</span>
-      <div class="dock-buttons">
-        <button id="btn-toggle-video" class="dock-btn">
-          ⏯️ Play/Pause
-        </button>
-        <button id="btn-recenter" class="dock-btn">
-          🎯 Center View
-        </button>
-      </div>
-    </div>
   </footer>
+
+  <!-- Embed Restriction Notice Banner (Shows if YouTube Error 150/101 occurs) -->
+  <div id="embed-restriction-card" class="embed-restriction-modal glass-panel hide">
+    <div class="restriction-header">
+      <span class="restriction-icon">⚠️</span>
+      <h3 class="cinzel-title">EMBEDDED PLAYBACK RESTRICTED</h3>
+    </div>
+    <p class="restriction-message">
+      The publisher of this YouTube video has restricted playback to YouTube only (YouTube Error 150/101).
+    </p>
+    <div class="restriction-actions">
+      <a id="btn-restriction-watch-yt" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="dock-btn active">
+        ▶️ Watch on YouTube ↗
+      </a>
+      <button type="button" id="btn-restriction-preset" class="dock-btn">
+        🌌 Load Interstellar
+      </button>
+      <button type="button" id="btn-restriction-change" class="dock-btn">
+        🎬 Choose Another Video
+      </button>
+      <button type="button" id="btn-restriction-dismiss" class="dock-btn secondary">
+        ✕ Dismiss
+      </button>
+    </div>
+  </div>
 
   <!-- Floating Seat Info Tooltip for Hover -->
   <div id="seat-tooltip" class="seat-tooltip hide">

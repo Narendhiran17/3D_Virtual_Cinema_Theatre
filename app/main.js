@@ -38,6 +38,8 @@ const state = {
   snackPack: 'butter', // 'butter' | 'caramel' | 'vip'
   popcornBites: 0,
   sodaSips: 0,
+  isMuted: false,
+  pendingYouTubeLoad: null,
 };
 
 let scene, cssScene, camera, cameraRig, renderer, cssRenderer, controls;
@@ -46,6 +48,7 @@ let cssScreenObj = null;
 let iframeElement = null;
 let html5VideoElement = null;
 let ytPlayer = null;
+let ytPlayerReady = false;
 let isVideoPlaying = true;
 let auditoriumModel = null;
 let layoutMetadata = null;
@@ -119,29 +122,65 @@ function showToast(message, duration = 4000) {
 
 function extractYouTubeId(urlOrId) {
   if (!urlOrId) return "zSWdZVtXT7E";
-  const trimmed = urlOrId.trim();
+  let str = urlOrId.trim();
 
-  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
-    return trimmed;
+  // If user pasted full iframe embed code snippet:
+  const iframeSrcMatch = str.match(/src=["']([^"']+)["']/i);
+  if (iframeSrcMatch) str = iframeSrcMatch[1];
+
+  // Strip leading/trailing quotes, brackets, or html tags
+  str = str.replace(/^["'<(\[]+|[>"')\]]+$/g, '').trim();
+
+  // Direct 11-character video ID
+  if (/^[a-zA-Z0-9_-]{11}$/.test(str)) {
+    return str;
   }
 
+  // Comprehensive YouTube URL matchers
   const patterns = [
-    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|live\/))([\w-]{11})/,
-    /[?&]v=([\w-]{11})/,
+    // youtu.be/<id>
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/i,
+    // youtube.com/embed/<id> or youtube-nocookie.com/embed/<id>
+    /youtube(?:-nocookie)?\.com\/embed\/([a-zA-Z0-9_-]{11})/i,
+    // youtube.com/shorts/<id>
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/i,
+    // youtube.com/live/<id>
+    /youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i,
+    // youtube.com/v/<id>
+    /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/i,
+    // Parameter v=<id> anywhere in query string (?v=... or &v=...)
+    /[?&]v=([a-zA-Z0-9_-]{11})/i,
   ];
 
   for (const regex of patterns) {
-    const match = trimmed.match(regex);
+    const match = str.match(regex);
     if (match && match[1]) {
       return match[1];
     }
   }
-  return trimmed;
+
+  return null;
+}
+
+function extractStartTime(url) {
+  if (!url) return 0;
+  const match = url.match(/[?&](?:t|start)=([0-9hms]+)/i);
+  if (!match) return 0;
+  const val = match[1];
+  if (/^\d+$/.test(val)) return parseInt(val, 10);
+  let seconds = 0;
+  const hours = val.match(/(\d+)h/i);
+  const minutes = val.match(/(\d+)m/i);
+  const secs = val.match(/(\d+)s/i);
+  if (hours) seconds += parseInt(hours[1], 10) * 3600;
+  if (minutes) seconds += parseInt(minutes[1], 10) * 60;
+  if (secs) seconds += parseInt(secs[1], 10);
+  return seconds;
 }
 
 function parseVideoSource(input) {
   if (!input) {
-    return { type: 'youtube', id: 'zSWdZVtXT7E' };
+    return { type: 'youtube', id: 'zSWdZVtXT7E', start: 0 };
   }
   const trimmed = input.trim();
 
@@ -156,14 +195,10 @@ function parseVideoSource(input) {
     return { type: 'direct', src: trimmed };
   }
 
-  // YouTube match
-  const ytMatch = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|live\/))([\w-]{11})/);
-  if (ytMatch && ytMatch[1]) {
-    return { type: 'youtube', id: ytMatch[1] };
-  }
-  const vMatch = trimmed.match(/[?&]v=([\w-]{11})/);
-  if (vMatch && vMatch[1]) {
-    return { type: 'youtube', id: vMatch[1] };
+  // YouTube match first (handles full URLs, shorts, share links, embeds, and raw IDs)
+  const ytId = extractYouTubeId(trimmed);
+  if (ytId) {
+    return { type: 'youtube', id: ytId, start: extractStartTime(trimmed) };
   }
 
   // Vimeo match
@@ -172,15 +207,29 @@ function parseVideoSource(input) {
     return { type: 'vimeo', id: vimeoMatch[1] };
   }
 
-  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
-    return { type: 'youtube', id: trimmed };
-  }
-
   if (/^https?:\/\//i.test(trimmed)) {
     return { type: 'direct', src: trimmed };
   }
 
-  return { type: 'youtube', id: 'zSWdZVtXT7E' };
+  return { type: 'youtube', id: 'zSWdZVtXT7E', start: 0 };
+}
+
+function buildYouTubeEmbedUrl(videoId, autoplay = false, start = 0) {
+  const autoplayParam = autoplay ? '1' : '0';
+  const startParam = start ? `&start=${start}` : '';
+  let originParam = '';
+  // Avoid origin parameter on localhost or file:// to prevent YouTube iframe CORS Error 150
+  if (
+    window.location.protocol.startsWith('http') &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1' &&
+    window.location.origin &&
+    window.location.origin !== 'null'
+  ) {
+    originParam = `&origin=${encodeURIComponent(window.location.origin)}`;
+  }
+
+  return `https://www.youtube.com/embed/${videoId}?autoplay=${autoplayParam}&enablejsapi=1&rel=0&modestbranding=1&controls=1&playsinline=1&fs=1&loop=1${startParam}${originParam}`;
 }
 
 // =============================================================================
@@ -1197,21 +1246,7 @@ function setupCSS3DScreen() {
   container.style.overflow = 'hidden';
 
   // 1. YouTube / Vimeo IFrame Player
-  const iframe = document.createElement('iframe');
-  iframe.id = 'theatre-youtube-player';
-  iframe.style.width = '100%';
-  iframe.style.height = '100%';
-  iframe.style.border = '0';
-  iframe.style.display = 'block';
-  iframe.style.position = 'absolute';
-  iframe.style.top = '0';
-  iframe.style.left = '0';
-  iframe.style.backgroundColor = '#000';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-  iframe.allowFullscreen = true;
-  iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-  container.appendChild(iframe);
-  iframeElement = iframe;
+  ensureYouTubeIframe(container);
 
   // 2. HTML5 Video Player
   const video = document.createElement('video');
@@ -1274,26 +1309,66 @@ function setupCSS3DScreen() {
   playTrailer(state.youtubeUrl || state.youtubeVideoId, false);
 }
 
+function ensureYouTubeIframe(parentContainer) {
+  let iframe = document.getElementById('theatre-youtube-player');
+  const container = parentContainer || document.getElementById('theatre-screen-container');
+
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'theatre-youtube-player';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = '0';
+    iframe.style.display = 'block';
+    iframe.style.position = 'absolute';
+    iframe.style.top = '0';
+    iframe.style.left = '0';
+    iframe.style.backgroundColor = '#000';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    if (container) {
+      container.appendChild(iframe);
+    }
+  } else if (container && !container.contains(iframe)) {
+    container.appendChild(iframe);
+  }
+  iframeElement = iframe;
+  return iframe;
+}
+
 function bindYouTubePlayer() {
-  if (window.YT && window.YT.Player && iframeElement) {
+  const iframe = ensureYouTubeIframe();
+  if (!iframe) return;
+
+  if (window.YT && window.YT.Player) {
     try {
-      if (ytPlayer && typeof ytPlayer.destroy === 'function') {
-        ytPlayer.destroy();
+      // If player already exists and API is intact, do NOT destroy it!
+      if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+        ytPlayerReady = true;
+        return;
       }
+
       ytPlayer = new YT.Player('theatre-youtube-player', {
         events: {
           'onReady': () => {
             console.log('YouTube Player bound successfully via official API');
+            ytPlayerReady = true;
+            if (state.pendingYouTubeLoad) {
+              const { id, autoplay, start } = state.pendingYouTubeLoad;
+              state.pendingYouTubeLoad = null;
+              loadYouTubeVideoInPlayer(id, autoplay, start);
+            }
           },
           'onStateChange': (event) => {
-            if (event.data === 1) {
+            if (event.data === 1) { // PLAYING
               isVideoPlaying = true;
               updatePlayPauseButton(true);
-            } else if (event.data === 2) {
+            } else if (event.data === 2) { // PAUSED
               isVideoPlaying = false;
               updatePlayPauseButton(false);
-            } else if (event.data === 0) {
-              console.log('YouTube video duration reached. Recursively replaying from start...');
+            } else if (event.data === 0) { // ENDED
+              console.log('YouTube video duration reached. Looping trailer from start...');
               try {
                 if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
                   ytPlayer.seekTo(0, true);
@@ -1305,12 +1380,111 @@ function bindYouTubePlayer() {
               isVideoPlaying = true;
               updatePlayPauseButton(true);
             }
+          },
+          'onError': (event) => {
+            handleYouTubeError(event.data);
           }
         }
       });
     } catch (e) {
       console.warn('Could not bind YT.Player instance:', e);
     }
+  }
+}
+
+function handleYouTubeError(errorCode) {
+  console.warn('YouTube Player reported error code:', errorCode);
+  let errorMsg = '⚠️ YouTube Video playback error.';
+  let showFallback = false;
+
+  switch (errorCode) {
+    case 2:
+      errorMsg = '⚠️ Invalid YouTube link or Video ID. Please verify the URL.';
+      break;
+    case 5:
+      errorMsg = '⚠️ HTML5 player playback error for this YouTube stream.';
+      break;
+    case 100:
+      errorMsg = '⚠️ Video not found (it may have been deleted or set to Private).';
+      showFallback = true;
+      break;
+    case 101:
+    case 150:
+      errorMsg = '⚠️ Video publisher has disabled embedded playback on 3rd-party sites (Error 150/101).';
+      showFallback = true;
+      break;
+    default:
+      errorMsg = `⚠️ YouTube playback issue (Error code: ${errorCode}).`;
+  }
+
+  showToast(errorMsg, 5000);
+
+  if (showFallback) {
+    showEmbedRestrictedBanner(state.youtubeVideoId);
+  }
+}
+
+function showEmbedRestrictedBanner(videoId) {
+  const card = document.getElementById('embed-restriction-card');
+  if (!card) return;
+  const link = document.getElementById('btn-restriction-watch-yt');
+  if (link && videoId) {
+    link.href = `https://www.youtube.com/watch?v=${videoId}`;
+  }
+  card.classList.remove('hide');
+}
+
+function hideEmbedRestrictedBanner() {
+  const card = document.getElementById('embed-restriction-card');
+  if (card) {
+    card.classList.add('hide');
+  }
+}
+
+function loadYouTubeVideoInPlayer(videoId, autoplay, start = 0) {
+  hideEmbedRestrictedBanner();
+
+  if (ytPlayer && ytPlayerReady && typeof ytPlayer.loadVideoById === 'function') {
+    try {
+      if (autoplay) {
+        ytPlayer.loadVideoById({
+          videoId: videoId,
+          startSeconds: start || 0,
+        });
+
+        // Test if autoplay succeeded or was blocked by browser audio policy
+        setTimeout(() => {
+          if (ytPlayer && typeof ytPlayer.getPlayerState === 'function') {
+            const ps = ytPlayer.getPlayerState();
+            // If not playing (1) or buffering (3), try muted play fallback
+            if (ps !== 1 && ps !== 3) {
+              console.log('Attempting muted autoplay fallback for YouTube...');
+              if (typeof ytPlayer.mute === 'function') {
+                ytPlayer.mute();
+                ytPlayer.playVideo();
+                state.isMuted = true;
+                updateMuteButton(true);
+                showToast('🔊 Trailer started muted due to browser policy. Click screen or press Unmute.', 4000);
+              }
+            }
+          }
+        }, 1200);
+      } else {
+        ytPlayer.cueVideoById({
+          videoId: videoId,
+          startSeconds: start || 0,
+        });
+      }
+      return;
+    } catch (err) {
+      console.warn('ytPlayer.loadVideoById error, falling back to iframe src:', err);
+    }
+  }
+
+  // Fallback: direct src update
+  const newSrc = buildYouTubeEmbedUrl(videoId, autoplay, start);
+  if (iframeElement && iframeElement.src !== newSrc) {
+    iframeElement.src = newSrc;
   }
 }
 
@@ -1331,12 +1505,17 @@ function playTrailer(sourceInput, autoplay = true) {
   state.currentVideoSource = parsed;
   console.log('Playing trailer source:', parsed);
 
+  hideEmbedRestrictedBanner();
+
   if (!iframeElement || !html5VideoElement) return;
 
   const autoplayParam = autoplay ? '1' : '0';
 
   if (parsed.type === 'direct') {
     iframeElement.style.display = 'none';
+    if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+      try { ytPlayer.pauseVideo(); } catch (e) {}
+    }
     iframeElement.src = 'about:blank';
 
     html5VideoElement.style.display = 'block';
@@ -1353,6 +1532,8 @@ function playTrailer(sourceInput, autoplay = true) {
         }).catch(err => {
           console.warn('Autoplay blocked by browser policy, muting audio to proceed:', err);
           html5VideoElement.muted = true;
+          state.isMuted = true;
+          updateMuteButton(true);
           html5VideoElement.play().then(() => {
             isVideoPlaying = true;
             updatePlayPauseButton(true);
@@ -1370,6 +1551,7 @@ function playTrailer(sourceInput, autoplay = true) {
     }
   } else if (parsed.type === 'vimeo') {
     unloadHTML5Video();
+    ensureYouTubeIframe();
     iframeElement.style.display = 'block';
     iframeElement.src = `https://player.vimeo.com/video/${parsed.id}?autoplay=${autoplayParam}&loop=1&title=0&byline=0&portrait=0`;
     isVideoPlaying = autoplay;
@@ -1377,12 +1559,20 @@ function playTrailer(sourceInput, autoplay = true) {
   } else {
     // YouTube
     unloadHTML5Video();
+    ensureYouTubeIframe();
     iframeElement.style.display = 'block';
-    const originParam = window.location.origin ? `&origin=${window.location.origin}` : '';
-    const newSrc = `https://www.youtube-nocookie.com/embed/${parsed.id}?autoplay=${autoplayParam}&enablejsapi=1&rel=0&modestbranding=1&controls=1&playsinline=1&fs=1&loop=1&playlist=${parsed.id}${originParam}`;
-    if (iframeElement.src !== newSrc) {
-      iframeElement.src = newSrc;
-      setTimeout(bindYouTubePlayer, 800);
+
+    state.youtubeVideoId = parsed.id;
+
+    if (ytPlayer && ytPlayerReady && typeof ytPlayer.loadVideoById === 'function') {
+      loadYouTubeVideoInPlayer(parsed.id, autoplay, parsed.start);
+    } else {
+      state.pendingYouTubeLoad = { id: parsed.id, autoplay, start: parsed.start };
+      const newSrc = buildYouTubeEmbedUrl(parsed.id, autoplay, parsed.start);
+      if (iframeElement.src !== newSrc) {
+        iframeElement.src = newSrc;
+      }
+      bindYouTubePlayer();
     }
     isVideoPlaying = autoplay;
     updatePlayPauseButton(autoplay);
@@ -1399,6 +1589,58 @@ function updatePlayPauseButton(isPlaying) {
   }
 }
 
+function updateMuteButton(isMuted) {
+  const btn = document.getElementById('btn-toggle-mute');
+  if (!btn) return;
+  btn.innerHTML = isMuted ? '🔇 Unmute' : '🔊 Mute';
+  btn.classList.toggle('active', !isMuted);
+}
+
+function toggleTrailerMute() {
+  if (state.currentVideoSource && state.currentVideoSource.type === 'direct' && html5VideoElement) {
+    html5VideoElement.muted = !html5VideoElement.muted;
+    state.isMuted = html5VideoElement.muted;
+    updateMuteButton(state.isMuted);
+    showToast(state.isMuted ? '🔇 Audio muted' : '🔊 Audio unmuted', 2000);
+    return;
+  }
+
+  if (ytPlayer) {
+    try {
+      if (typeof ytPlayer.isMuted === 'function') {
+        const muted = ytPlayer.isMuted();
+        if (muted) {
+          ytPlayer.unMute();
+          state.isMuted = false;
+          updateMuteButton(false);
+          showToast('🔊 Audio unmuted', 2000);
+        } else {
+          ytPlayer.mute();
+          state.isMuted = true;
+          updateMuteButton(true);
+          showToast('🔇 Audio muted', 2000);
+        }
+        return;
+      }
+    } catch (e) {
+      console.warn('ytPlayer mute toggle error:', e);
+    }
+  }
+
+  if (iframeElement && iframeElement.contentWindow) {
+    state.isMuted = !state.isMuted;
+    const func = state.isMuted ? 'mute' : 'unMute';
+    iframeElement.contentWindow.postMessage(JSON.stringify({ event: 'command', func }), '*');
+    updateMuteButton(state.isMuted);
+    showToast(state.isMuted ? '🔇 Audio muted' : '🔊 Audio unmuted', 2000);
+  }
+}
+
+function reloadTrailer() {
+  showToast('🔄 Reloading trailer stream...', 2000);
+  playTrailer(state.youtubeUrl || state.youtubeVideoId, isVideoPlaying);
+}
+
 function toggleTrailerPlayback() {
   if (state.currentVideoSource && state.currentVideoSource.type === 'direct' && html5VideoElement) {
     if (html5VideoElement.paused || html5VideoElement.ended) {
@@ -1411,6 +1653,8 @@ function toggleTrailerPlayback() {
         }).catch(err => {
           console.warn('Direct video play blocked by browser policy, muting to resume:', err);
           html5VideoElement.muted = true;
+          state.isMuted = true;
+          updateMuteButton(true);
           html5VideoElement.play().then(() => {
             isVideoPlaying = true;
             updatePlayPauseButton(true);
@@ -1437,6 +1681,9 @@ function toggleTrailerPlayback() {
         broadcastPartyMessage({ type: 'SYNC_PAUSE' });
       } else {
         ytPlayer.playVideo();
+        if (ytPlayer.isMuted && ytPlayer.isMuted() && !state.isMuted) {
+          try { ytPlayer.unMute(); } catch (e) {}
+        }
         isVideoPlaying = true;
         updatePlayPauseButton(true);
         broadcastPartyMessage({ type: 'SYNC_PLAY' });
@@ -1554,15 +1801,49 @@ function clampCameraInsideTheatre() {
 // =============================================================================
 // SEAT & CONCESSION INTERACTION: RAYCASTING & HOVER
 // =============================================================================
+function isPointerOverUI(event) {
+  if (!event) return false;
+  const el = event.target;
+  if (!el) return false;
+
+  // Check if pointer is over any HUD dock, button, modal, form control, toast, or pill
+  if (el.closest) {
+    if (
+      el.closest(
+        '#theatre-hud-bottom, #theatre-hud-top, .hud-bottom, .hud-top, ' +
+        '.modal-backdrop, .glass-panel, .embed-restriction-modal, .toast-notification, ' +
+        '.seat-tooltip, .interactive-seat-map, .seat-node, .preset-btn, .concession-btn, ' +
+        'button, input, select, textarea, label, a, .dock-btn, .reaction-btn, .hud-btn'
+      )
+    ) {
+      return true;
+    }
+  }
+
+  const tag = (el.tagName || '').toLowerCase();
+  return ['button', 'input', 'select', 'textarea', 'label', 'a'].includes(tag);
+}
+
 function handlePointerMove(event) {
   if (!state.inTheatre) return;
+
+  const tooltip = document.getElementById('seat-tooltip');
+
+  // If pointer is over HUD buttons or modal, dismiss tooltip & unhighlight seat
+  if (isPointerOverUI(event)) {
+    if (tooltip) tooltip.classList.add('hide');
+    if (hoveredSeat && originalMaterialMap.has(hoveredSeat)) {
+      hoveredSeat.material = originalMaterialMap.get(hoveredSeat);
+      hoveredSeat = null;
+    }
+    document.body.style.cursor = 'default';
+    return;
+  }
 
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
-
-  const tooltip = document.getElementById('seat-tooltip');
 
   // 1. Check Concessions Raycast First
   if (concessionsGroup && concessionsGroup.visible) {
@@ -1640,6 +1921,12 @@ function handlePointerMove(event) {
 function handlePointerDown(event) {
   if (!state.inTheatre) return;
 
+  // CRITICAL FIX: If pointer is clicking on any bottom dock button, top HUD button,
+  // or modal, ignore 3D raycasting so it NEVER redirects to the seat behind the button!
+  if (isPointerOverUI(event)) {
+    return;
+  }
+
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -1660,7 +1947,24 @@ function handlePointerDown(event) {
     }
   }
 
-  // 2. Check Seat Selection Clicks
+  // 2. Check Screen Click to Play/Pause Trailer & Unmute
+  if (screenMesh) {
+    const screenHits = raycaster.intersectObject(screenMesh, false);
+    if (screenHits && screenHits.length > 0) {
+      toggleTrailerPlayback();
+      if (ytPlayer && typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
+        try {
+          ytPlayer.unMute();
+          state.isMuted = false;
+          updateMuteButton(false);
+          showToast('🔊 Audio unmuted', 2000);
+        } catch (e) {}
+      }
+      return;
+    }
+  }
+
+  // 3. Check Seat Selection Clicks
   if (!auditoriumModel) return;
 
   const intersects = raycaster.intersectObjects(auditoriumModel.children, true);
@@ -2058,13 +2362,105 @@ function setupEventListeners() {
     toggleTrailerPlayback();
   });
 
+  // Bottom Dock: Screen Audio Mute / Unmute
+  const btnToggleMute = document.getElementById('btn-toggle-mute');
+  if (btnToggleMute) {
+    btnToggleMute.addEventListener('click', () => {
+      toggleTrailerMute();
+    });
+  }
+
+  // Bottom Dock: Reload Current Trailer
+  const btnReloadVideo = document.getElementById('btn-reload-video');
+  if (btnReloadVideo) {
+    btnReloadVideo.addEventListener('click', () => {
+      reloadTrailer();
+    });
+  }
+
+  // Embed Restriction Modal Action Handlers
+  const btnRestrPreset = document.getElementById('btn-restriction-preset');
+  if (btnRestrPreset) {
+    btnRestrPreset.addEventListener('click', () => {
+      hideEmbedRestrictedBanner();
+      const interstellarUrl = 'https://www.youtube.com/watch?v=zSWdZVtXT7E';
+      document.getElementById('input-movie-title').value = 'Interstellar • IMAX 70mm Special Presentation';
+      document.getElementById('input-youtube-url').value = interstellarUrl;
+      state.movieTitle = 'Interstellar • IMAX 70mm Special Presentation';
+      document.getElementById('hud-movie-title').textContent = state.movieTitle;
+      playTrailer(interstellarUrl, true);
+    });
+  }
+
+  const btnRestrChange = document.getElementById('btn-restriction-change');
+  if (btnRestrChange) {
+    btnRestrChange.addEventListener('click', () => {
+      hideEmbedRestrictedBanner();
+      document.getElementById('lobby-modal').classList.add('active');
+    });
+  }
+
+  const btnRestrDismiss = document.getElementById('btn-restriction-dismiss');
+  if (btnRestrDismiss) {
+    btnRestrDismiss.addEventListener('click', () => {
+      hideEmbedRestrictedBanner();
+    });
+  }
+
+  // Live Auto-Detection and Title Lookup for Custom YouTube Links
+  const ytInput = document.getElementById('input-youtube-url');
+  if (ytInput) {
+    let debounceTimer = null;
+    const handleUrlUpdate = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const val = ytInput.value.trim();
+        if (!val) return;
+
+        // Deselect presets if custom input entered
+        const isPreset = Array.from(presetBtns).some(b => b.getAttribute('data-url') === val);
+        if (!isPreset) {
+          presetBtns.forEach(b => b.classList.remove('active'));
+        }
+
+        const parsed = parseVideoSource(val);
+        if (parsed.type === 'youtube') {
+          const titleInput = document.getElementById('input-movie-title');
+          const isDefault = !titleInput.value ||
+            titleInput.value.includes('Interstellar') ||
+            titleInput.value.includes('IMAX 70mm') ||
+            titleInput.value.trim() === 'Cinema Presentation';
+
+          // Query YouTube's free, public oEmbed API to fetch real title
+          fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${parsed.id}&format=json`)
+            .then(r => r.json())
+            .then(data => {
+              if (data && data.title) {
+                if (isDefault) {
+                  titleInput.value = data.title;
+                }
+                showToast(`🎬 YouTube video verified: "${data.title}"`, 3500);
+              }
+            })
+            .catch(() => {
+              // Video might still be valid even if oEmbed is offline
+            });
+        }
+      }, 400);
+    };
+
+    ytInput.addEventListener('input', handleUrlUpdate);
+    ytInput.addEventListener('paste', handleUrlUpdate);
+    ytInput.addEventListener('change', handleUrlUpdate);
+  }
+
   // Bottom Dock: Ambilight Toggle
   const btnAmbilight = document.getElementById('btn-toggle-ambilight');
   if (btnAmbilight) {
     btnAmbilight.addEventListener('click', () => {
       state.ambilightEnabled = !state.ambilightEnabled;
       btnAmbilight.classList.toggle('active', state.ambilightEnabled);
-      btnAmbilight.innerHTML = state.ambilightEnabled ? '✨ Ambilight: ON' : '✨ Ambilight: OFF';
+      btnAmbilight.innerHTML = state.ambilightEnabled ? '✨ Ambilight' : '✨ Ambilight (Off)';
       showToast(state.ambilightEnabled ? '✨ Screen Ambilight Enabled' : 'Ambilight Disabled');
     });
   }
@@ -2076,10 +2472,27 @@ function setupEventListeners() {
       initSpatialAudio();
       state.spatialAudioEnabled = !state.spatialAudioEnabled;
       btnSpatial.classList.toggle('active', state.spatialAudioEnabled);
-      btnSpatial.innerHTML = state.spatialAudioEnabled ? '🔊 Spatial 3D: ON' : '🔊 Spatial 3D: OFF';
+      btnSpatial.innerHTML = state.spatialAudioEnabled ? '🔊 Spatial' : '🔊 Spatial (Off)';
       showToast(state.spatialAudioEnabled ? '🔊 3D Positional Audio & Dolby Atmos Sweet Spot Enabled' : 'Spatial Audio Disabled');
     });
   }
+
+  // Prevent any click/tap on UI panels and docks from propagating into 3D scene raycasting
+  const uiPanels = [
+    document.getElementById('theatre-hud-bottom'),
+    document.getElementById('theatre-hud-top'),
+    document.getElementById('theatre-seatmap-modal'),
+    document.getElementById('watch-party-modal'),
+    document.getElementById('lobby-modal'),
+    document.getElementById('embed-restriction-card'),
+  ];
+  uiPanels.forEach(panel => {
+    if (panel) {
+      ['pointerdown', 'mousedown', 'touchstart'].forEach(evt => {
+        panel.addEventListener(evt, (e) => e.stopPropagation());
+      });
+    }
+  });
 
   // Bottom Dock: 3D Floating Reaction Buttons
   document.querySelectorAll('.reaction-btn').forEach(btn => {
@@ -2131,9 +2544,10 @@ function enterTheatre() {
   state.movieTitle = movieTitleInput || "Cinema Presentation";
   state.youtubeUrl = videoUrlInput;
   state.currentVideoSource = parseVideoSource(videoUrlInput);
-  state.youtubeVideoId = state.currentVideoSource.id || extractYouTubeId(videoUrlInput);
+  state.youtubeVideoId = state.currentVideoSource.id || extractYouTubeId(videoUrlInput) || "zSWdZVtXT7E";
 
   const initialSeat = state.currentSeatId || "D-008";
+  const wasAlreadyInTheatre = state.inTheatre;
 
   // Hide Lobby Modal & Show HUDs
   document.getElementById('lobby-modal').classList.remove('active');
@@ -2143,18 +2557,22 @@ function enterTheatre() {
 
   state.inTheatre = true;
 
-  // Initialize Spatial Audio on user gesture & play chime
+  // Initialize Spatial Audio on user gesture
   initSpatialAudio();
-  playCinemaIntroChime();
 
   // Start Trailer Playback
   playTrailer(videoUrlInput, true);
 
-  // Transition camera to starting seat
-  setTimeout(() => {
-    moveToSeat(initialSeat, 2.2);
-    applyLightingMode('cinema');
-  }, 300);
+  if (!wasAlreadyInTheatre) {
+    playCinemaIntroChime();
+    // Transition camera to starting seat
+    setTimeout(() => {
+      moveToSeat(initialSeat, 2.2);
+      applyLightingMode('cinema');
+    }, 300);
+  } else {
+    showToast(`🎬 Now Playing: ${state.movieTitle}`, 3000);
+  }
 }
 
 function onWindowResize() {
